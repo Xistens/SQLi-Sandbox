@@ -1,0 +1,18 @@
+{
+    "name": "challenge4",
+    "title": "Plenty of Books",
+    "category": "Web",
+    "tags": [
+        "SQL Injection"
+    ],
+    "difficulty": "medium",
+    "description": "All the previous vulnerabilities are patched, but the developers have added a new Book feature.",
+    "flag": "THM{5ydwrc97LfZZqsxBVNBJHTAYNvExnYPQ}",
+    "database": {
+        "drivername": "sqlite"
+    },
+    "track": {
+        "track_id": 1,
+        "position_in_track": 4
+    }
+}

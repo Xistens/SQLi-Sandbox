@@ -1,0 +1,87 @@
+.login-form {
+    width: 340px;
+    margin: 50px auto;
+}
+
+.login-form form {
+    margin-bottom: 15px;
+    background: #f7f7f7;
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+    padding: 30px;
+}
+
+.login-form h2 {
+    margin: 0 0 15px;
+}
+
+.form-control,
+.btn {
+    min-height: 38px;
+    border-radius: 2px;
+}
+
+.btn {
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.cardlist-container {
+    min-height:400px
+}
+.problem-list-card {
+    cursor: pointer;
+}
+.body-med {
+    font-size:.88889rem
+}
+.pull-right {
+    float: right;
+}
+
+.b-offset {
+    margin-bottom: 1em;
+}
+.pb {
+    padding-bottom: 1em;
+}
+.main {
+    padding-top: 1.5em;
+}
+
+
+
+.diff-easy {
+    color: #9acc14;
+}
+.diff-medium {
+    color: #f7af3e;
+}
+.diff-hard, .diff-insane {
+    color: #db524b;
+}
+
+.border-left-easy {
+    border-left: .25rem solid #9acc14!important;
+}
+.border-left-medium {
+    border-left: .25rem solid #f7af3e!important;
+}
+.border-left-hard, .border-left-insane {
+    border-left: .25rem solid #db524b!important;
+}
+
+
+.deco-none {
+  color: inherit;
+  text-decoration: inherit;
+}
+
+.deco-none:link {
+  color: inherit;
+  text-decoration: inherit;
+}
+
+.deco-none:hover {
+  color: inherit;
+  text-decoration: inherit;
+}

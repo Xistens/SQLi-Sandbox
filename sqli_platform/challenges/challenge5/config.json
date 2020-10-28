@@ -1,0 +1,18 @@
+{
+    "name": "challenge5",
+    "title": "Plenty of Books2",
+    "category": "Web",
+    "tags": [
+        "SQL Injection"
+    ],
+    "difficulty": "Hard",
+    "description": "The book function has received some updates; find a way to exploit it.",
+    "flag": "THM{BEssk6Rjpfa95Te48GfzBS8YUjyMF9sc}",
+    "database": {
+        "drivername": "sqlite"
+    },
+    "track": {
+        "track_id": 1,
+        "position_in_track": 5
+    }
+}

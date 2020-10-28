@@ -1,0 +1,28 @@
+{% extends "challenges/challenge1/layout.html" %}
+{% block title %}Change Password{% endblock %}
+{% block body %}
+<div class="login-form">
+    <form action="{{ url_for('.changepwd') }}" method="post">
+        <h2 class="text-center">Change your password</h2>
+        <div class="form-group">
+            <input type="password" class="form-control" placeholder="Current Password" required="required"
+                name="current-password">
+        </div>
+        <div class="form-group">
+            <input type="password" class="form-control" placeholder="New Password" required="required" name="password">
+        </div>
+        <div class="form-group">
+            <input type="password" class="form-control" placeholder="New Password" required="required" name="password2">
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary btn-block">Change</button>
+        </div>
+        <div class="clearfix">
+            <label class="pull-left checkbox-inline"></label>
+        </div>
+    </form>
+</div>
+</body>
+
+</html>
+{% endblock %}

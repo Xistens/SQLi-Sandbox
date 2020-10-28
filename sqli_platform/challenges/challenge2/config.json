@@ -1,0 +1,18 @@
+{
+    "name": "challenge2",
+    "title": "Vulnerable Notes",
+    "category": "Web",
+    "tags": [
+        "SQL Injection"
+    ],
+    "difficulty": "medium",
+    "description": "The login function has been patched, but the note function has been enabled. Find a way to dump the database and retrieve the flag.",
+    "flag": "THM{FLAGCHALLENGE2}",
+    "database": {
+        "drivername": "sqlite"
+    },
+    "track": {
+        "track_id": 1,
+        "position_in_track": 2
+    }
+}

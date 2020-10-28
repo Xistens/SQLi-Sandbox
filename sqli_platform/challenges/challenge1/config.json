@@ -1,0 +1,16 @@
+{
+    "name": "challenge1",
+    "title": "Bad Authentication",
+    "category": "Web",
+    "tags": ["SQL Injection"],
+    "difficulty": "easy",
+    "description": "Break-in as an administrator and retrieve the flag.",
+    "flag": "THM{AuTh}",
+    "database": {
+        "drivername": "sqlite"
+    },
+    "track": {
+        "track_id": 1,
+        "position_in_track": 1
+    }
+}
