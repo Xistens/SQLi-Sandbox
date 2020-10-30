@@ -2,7 +2,7 @@
 import sqlite3
 import os
 from sqli_platform import app_log
-from sqli_platform.utils.flag import place_flag_schema
+from sqli_platform.utils.challenge import place_flag_schema
 
 
 class Database(object):

@@ -11,6 +11,7 @@ from flask import (
     flash
 )
 from sqli_platform import app, app_log, db
+from sqli_platform.utils.challenge import get_config
 
 """
 The login function has been patched.
@@ -22,7 +23,7 @@ Signup:
 """
 
 _bp = "challenge2"
-challenge2 = Blueprint(_bp, __name__, template_folder="templates", url_prefix="/challenge2")
+challenge2 = Blueprint(_bp, __name__, template_folder="templates", url_prefix=f"/{_bp}")
 _templ = "challenges/challenge1"
 
 
@@ -32,16 +33,17 @@ def sessions():
     
     """
     return dict(
-        csession=session.get("challenge2_user_id", None),
-        csession_name=session.get("challenge2_username", None)
+        csession=session.get(f"{_bp}_user_id", None),
+        csession_name=session.get(f"{_bp}_username", None),
+        ctitle=get_config(_bp, "title")
     )
 
 
 def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        if session.get("challenge2_user_id", None) is None:
-            return redirect(url_for(f"challenge2.login", next=request.url))
+        if session.get(f"{_bp}_user_id", None) is None:
+            return redirect(url_for(f"{_bp}.login", next=request.url))
         return f(*args, **kwargs)
     return decorated_function
 
@@ -61,9 +63,9 @@ def login():
                             [username, password], one=True)
 
         if user:
-            session["challenge2_user_id"] = user["id"]
-            session["challenge2_username"] = user["username"]
-            return redirect(url_for("challenge2.home"))
+            session[f"{_bp}_user_id"] = user["id"]
+            session[f"{_bp}_username"] = user["username"]
+            return redirect(url_for(f"{_bp}.home"))
         else:
             flash("Invalid username or password.", "danger")
     return render_template(f"{_templ}/login.html")
@@ -85,7 +87,7 @@ def signup():
         else:
             db.sql_insert(_bp, "INSERT INTO users (username, password) VALUES (?, ?)", [
                           username, password])
-            return redirect(url_for("challenge2.login"))
+            return redirect(url_for(f"{_bp}.login"))
     return render_template(f"{_templ}/registration.html")
 
 
@@ -99,14 +101,14 @@ def home():
 @login_required
 def notes():
     user = db.sql_query(_bp, "SELECT username FROM users WHERE id=?",
-                        [session["challenge2_user_id"]], one=True)
+                        [session[f"{_bp}_user_id"]], one=True)
 
     if request.method == "POST":
         title = request.form["title"]
         note = request.form["note"]
         db.sql_insert(_bp, "INSERT INTO notes (username, title, note) VALUES (?, ?, ?)",
                       [user["username"], title, note])
-        return redirect(url_for("challenge2.notes"))
+        return redirect(url_for(f"{_bp}.notes"))
 
     notes = db.sql_query(_bp,
                          f"SELECT title, note FROM notes WHERE username = '{user['username']}'")
@@ -123,5 +125,5 @@ def changepwd():
 @challenge2.route("/logout")
 def logout():
     session.clear()
-    return redirect(url_for("challenge2.login"))
+    return redirect(url_for(f"{_bp}.login"))
 

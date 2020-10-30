@@ -11,7 +11,7 @@ from flask import (
     flash
 )
 from sqli_platform import app, app_log, db
-from sqli_platform.utils.flag import get_flag
+from sqli_platform.utils.challenge import get_flag, get_config
 
 """
 The login function has been patched.
@@ -29,7 +29,7 @@ password: <password set in previous step>
 
 _bp = "challenge3"
 challenge3 = Blueprint(_bp, __name__,
-                       template_folder="templates", url_prefix="/challenge3")
+                       template_folder="templates", url_prefix=f"/{_bp}")
 _templ = "challenges/challenge1"
 
 
@@ -39,16 +39,17 @@ def sessions():
     
     """
     return dict(
-        csession=session.get("challenge3_user_id", None),
-        csession_name=session.get("challenge3_username", None)
+        csession=session.get(f"{_bp}_user_id", None),
+        csession_name=session.get(f"{_bp}_username", None),
+        ctitle=get_config(_bp, "title")
     )
 
 
 def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        if session.get("challenge3_user_id", None) is None:
-            return redirect(url_for(f"challenge3.login", next=request.url))
+        if session.get(f"{_bp}_user_id", None) is None:
+            return redirect(url_for(f"{_bp}.login", next=request.url))
         return f(*args, **kwargs)
     return decorated_function
 
@@ -68,8 +69,8 @@ def login():
                             [username, password], one=True)
 
         if user:
-            session["challenge3_user_id"] = user["id"]
-            session["challenge3_username"] = user["username"]
+            session[f"{_bp}_user_id"] = user["id"]
+            session[f"{_bp}_username"] = user["username"]
             return redirect(url_for("challenge3.home"))
         else:
             flash("Invalid username or password.", "danger")
@@ -84,7 +85,7 @@ def signup():
 
         if not (username and password):
             flash("Username or Password cannot be empty.")
-            return redirect(url_for("challenge3.signup"))
+            return redirect(url_for(f"{_bp}.signup"))
 
         # No error checking etc...
         if db.sql_query(_bp, "SELECT username FROM users WHERE username=?", [username]):
@@ -92,32 +93,32 @@ def signup():
         else:
             db.sql_insert(_bp, "INSERT INTO users (username, password) VALUES (?, ?)", [
                           username, password])
-            return redirect(url_for("challenge3.login"))
+            return redirect(url_for(f"{_bp}.login"))
     return render_template(f"{_templ}/registration.html")
 
 
 @challenge3.route("/home")
 @login_required
 def home():
-    sess = session.get("challenge3_user_id", None)
+    sess = session.get(f"{_bp}_user_id", None)
     f = ""
     if sess == 1:
-        f = get_flag("challenge3")
-    return render_template(f"challenge3/index.html", flag=f)
+        f = get_flag(_bp)
+    return render_template(f"{_bp}/index.html", flag=f)
 
 
 @challenge3.route("/notes", methods=["GET", "POST"])
 @login_required
 def notes():
     user = db.sql_query(_bp, "SELECT username FROM users WHERE id=?",
-                        [session["challenge3_user_id"]], one=True)
+                        [session[f"{_bp}_user_id"]], one=True)
 
     if request.method == "POST":
         title = request.form["title"]
         note = request.form["note"]
         db.sql_insert(_bp, "INSERT INTO notes (username, title, note) VALUES (?, ?, ?)",
                       [user["username"], title, note])
-        return redirect(url_for("challenge3.notes"))
+        return redirect(url_for(f"{_bp}.notes"))
 
     notes = db.sql_query(_bp,
                          f"SELECT title, note FROM notes WHERE username = ?", [user['username']])
@@ -134,29 +135,24 @@ def changepwd():
 
         if not (new_pwd == new_pwd2):
             flash("Passwords doesn't match.")
-            return redirect(url_for("challenge3.changepwd"))
+            return redirect(url_for(f"{_bp}.changepwd"))
 
         user = db.sql_query(_bp, "SELECT username, password FROM users WHERE id = ?",
-                            [session["challenge3_user_id"]], one=True)
+                            [session[f"{_bp}_user_id"]], one=True)
 
         if not (current_pwd == user["password"]):
             flash("Wrong password supplied.", "danger")
-            return redirect(url_for("challenge3.changepwd"))
+            return redirect(url_for(f"{_bp}.changepwd"))
 
         db.sql_insert(
             _bp, f"UPDATE users SET password = ? WHERE username = '{user['username']}'", [new_pwd])
         flash("Password changed", "info")
-        return redirect(url_for("challenge3.changepwd"))
+        return redirect(url_for(f"{_bp}.changepwd"))
     return render_template(f"{_templ}/updatepwd.html")
 
 
 @challenge3.route("/logout")
 def logout():
     session.clear()
-    return redirect(url_for("challenge3.login"))
-# @challenge3.route('/test')
-# def test():
-#     result = db.get_engine(current_app, bind="challenge3").execute("SELECT * FROM user")
-#     for i in result:
-#         print(i)
-#     return render_template('index.html')
+    return redirect(url_for(f"{_bp}.login"))
+

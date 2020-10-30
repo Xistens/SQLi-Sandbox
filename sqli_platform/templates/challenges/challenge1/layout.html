@@ -14,37 +14,6 @@
 </head>
 
 <body>
-    <!-- <nav class="navbar navbar-default" role="navigation">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-1">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-            </div>
-            <div class="navbar-nav">Challenge1</div>
-            <div class="navbar-text navbar-right">
-                {% if csession %}
-                Logged in as {{ csession_name }} |
-                {% endif %}
-                <a href="{{ url_for('index') }}">[Main Menu]</a>
-            </div>
-            <div class="collapse navbar-collapse" id="navbar-collapse-1">
-                <ul class="nav navbar-nav navbar-left">
-                {% if not csession %}
-                    <li><a href="{{ url_for('.login') }}">Login</a></li>
-                {% else %}
-                    <li><a href="{{ url_for('.home') }}">Home</a></li>
-                    <li><a href="{{ url_for('.notes') }}">Notes</a></li>
-                    <li><a href="{{ url_for('.changepwd') }}">Profile</a></li>
-                    <li><a href="{{ url_for('.logout') }}">Logout</a></li>
-                {% endif %}
-                </ul>
-            </div>
-        </div>
-    </nav> -->
     <nav class="navbar navbar-expand-md navbar-light bg-light">
         <div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
             <ul class="navbar-nav mr-auto">
@@ -59,7 +28,7 @@
             </ul>
         </div>
         <div class="mx-auto order-0">
-            <h3 class="navbar-brand mx-auto" href="#">ChallengeX</h3>
+            <h3 class="navbar-brand mx-auto" href="#">{{ ctitle }}</h3>
         </div>
         <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
             <ul class="navbar-nav ml-auto">

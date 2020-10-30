@@ -2,21 +2,32 @@
 import fileinput
 from sqli_platform import app, _configs
 
+def get_config(challenge: str, key: str):
+    """
+    Retrieves the flag from the _configs object
+
+    Args:
+        challenge:  (str) The name of the challenge to retrieve the flag from
+        key:       (str) The name of the configuration to retrieve
+    Return:
+        Returns the value of the configuration if it is found, else it will return none.
+    """
+    for conf in _configs:
+        name = conf["config"]["name"]
+        if name == challenge:
+            return conf["config"].get(key, None)
+    return None
 
 def get_flag(challenge: str):
     """
-    Retrieves the flag from the _configs object
+    Retrieves the flag from the _configs object. Abstraction...
 
     Args:
         challenge:  (str) The name of the challenge to retrieve the flag from
     Return:
         Returns the flag (str) if it is found, else it will return None
     """
-    for conf in _configs:
-        name = conf["config"]["name"]
-        if name == challenge:
-            return conf["config"].get("flag", None)
-    return None
+    return get_config(challenge, "flag")
 
 
 def place_flag_schema(schema: str, challenge: str):
