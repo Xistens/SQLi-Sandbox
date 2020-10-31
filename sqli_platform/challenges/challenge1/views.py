@@ -11,7 +11,11 @@ from flask import (
     flash
 )
 from sqli_platform import app, app_log, db
-from sqli_platform.utils.challenge import get_flag, get_config
+from sqli_platform.utils.challenge import (
+    get_flag,
+    get_config,
+    format_query
+)
 
 """
 Flag1 - Login as admin
@@ -33,18 +37,23 @@ SELECT id, username FROM users WHERE username = '-1747' OR SUBSTR((SELECT COALES
 _bp = "challenge1"
 challenge1 = Blueprint(_bp , __name__, template_folder='templates', url_prefix=f"/{_bp}")
 _templ = "challenges/challenge1"
-
+_query = []
 
 @challenge1.context_processor
 def sessions():
     """
     
     """
-    return dict(
+    global _query
+    d = dict(
         csession = session.get(f"{_bp}_user_id", None),
         csession_name=session.get(f"{_bp}_username", None),
-        ctitle=get_config(f"{_bp}", "title")
+        ctitle=get_config(f"{_bp}", "title"),
+        query=format_query(_query)
     )
+    _query = []
+    return d
+
 
 def login_required(f):
     @wraps(f)
@@ -57,6 +66,8 @@ def login_required(f):
 @challenge1.route("/")
 @challenge1.route("/login", methods=["GET", "POST"])
 def login():
+    global _query
+
     if request.method == "POST":
         username = request.form["username"].lower()
         password = request.form["password"]
@@ -65,8 +76,9 @@ def login():
             flash("Username or Password cannot be empty.", "warning")
             return redirect(url_for(f"{_bp}.login"))
         
-        user = db.sql_query(_bp,
-            f"SELECT id, username FROM users WHERE username = '{username}' AND password = '{password}'")
+        query = f"SELECT id, username FROM users WHERE username = '{username}' AND password = '{password}'"
+        _query.append(query)
+        user = db.sql_query(_bp, query)
         
         if user:
             data = []
@@ -86,6 +98,8 @@ def login():
 
 @challenge1.route("/signup", methods=["GET", "POST"])
 def signup():
+    global _query
+
     if request.method == "POST":
         username = request.form["username"].lower()
         password = request.form["password"]
@@ -95,11 +109,15 @@ def signup():
             return redirect(url_for(f"{_bp}.signup"))
 
         # No error checking etc...
-        if db.sql_query(_bp, "SELECT username FROM users WHERE username=?", [username]):
+        query = "SELECT username FROM users WHERE username=?"
+        _query.append((query, [username]))
+        if db.sql_query(_bp, query, [username]):
             flash("Username already exists.", "danger")
         else:
-            db.sql_insert(_bp, "INSERT INTO users (username, password) VALUES (?, ?)", [
-                          username, password])
+            query = "INSERT INTO users (username, password) VALUES (?, ?)"
+            params = [username, password]
+            _query.append((query, params))
+            db.sql_insert(_bp, query, params)
             return redirect(url_for(f"{_bp}.login"))
     return render_template(f"{_templ}/registration.html")
 

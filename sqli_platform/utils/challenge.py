@@ -48,3 +48,23 @@ def place_flag_schema(schema: str, challenge: str):
                 f.write(new_data)
     except IOError:
         raise IOError(f"Error placing flag in {schema} for challenge {challenge}")
+
+
+def format_query(queries: list = []) -> str:
+    """
+    Helper function to format the database query to display for the user
+
+    Args:
+        queries:      (list) A list containing queries or a list containing
+                        tuples with queries and input parameters.
+    Return:
+        string:       (str) The formatted output
+    """
+    string = ""
+    for item in queries:
+        if type(item) is tuple:
+            params = ', '.join(str(i) for i in item[1])
+            string += f"Query: {item[0]}\nParameters: {params}\n"
+        else:
+            string += f"Query: {item}\n"
+    return string

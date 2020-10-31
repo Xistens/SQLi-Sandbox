@@ -1,0 +1,10 @@
+[*]
+charset = utf-8
+trim_trailing_whitespace = true
+
+[*.{cs,py}]
+indent_size = 4
+
+# Markdown uses trailing whitespace to mean mandatory line-break
+[*.md]
+trim_trailing_whitespace = false

@@ -11,7 +11,7 @@ from flask import (
     flash
 )
 from sqli_platform import app, app_log, db
-from sqli_platform.utils.challenge import get_flag, get_config
+from sqli_platform.utils.challenge import get_flag, get_config, format_query
 
 """
 The login function has been patched.
@@ -31,18 +31,22 @@ _bp = "challenge3"
 challenge3 = Blueprint(_bp, __name__,
                        template_folder="templates", url_prefix=f"/{_bp}")
 _templ = "challenges/challenge1"
-
+_query = []
 
 @challenge3.context_processor
 def sessions():
     """
     
     """
-    return dict(
+    global _query
+    d = dict(
         csession=session.get(f"{_bp}_user_id", None),
         csession_name=session.get(f"{_bp}_username", None),
-        ctitle=get_config(_bp, "title")
+        ctitle=get_config(f"{_bp}", "title"),
+        query=format_query(_query)
     )
+    _query = []
+    return d
 
 
 def login_required(f):
@@ -57,6 +61,8 @@ def login_required(f):
 @challenge3.route("/")
 @challenge3.route("/login", methods=["GET", "POST"])
 def login():
+    global _query
+
     if request.method == "POST":
         username = request.form["username"].lower()
         password = request.form["password"]
@@ -65,8 +71,11 @@ def login():
             flash("Username or Password cannot be empty.", "warning")
             return redirect(url_for("challenge3.login"))
 
-        user = db.sql_query(_bp, "SELECT id, username FROM users WHERE username = ? AND password = ?",
-                            [username, password], one=True)
+        query = "SELECT id, username FROM users WHERE username = ? AND password = ?"
+        params = [username, password]
+        _query.append((query, params))
+
+        user = db.sql_query(_bp, query, params, one=True)
 
         if user:
             session[f"{_bp}_user_id"] = user["id"]
@@ -79,6 +88,8 @@ def login():
 
 @challenge3.route("/signup", methods=["GET", "POST"])
 def signup():
+    global _query
+
     if request.method == "POST":
         username = request.form["username"].lower()
         password = request.form["password"]
@@ -88,11 +99,15 @@ def signup():
             return redirect(url_for(f"{_bp}.signup"))
 
         # No error checking etc...
-        if db.sql_query(_bp, "SELECT username FROM users WHERE username=?", [username]):
+        query = "SELECT username FROM users WHERE username=?"
+        _query.append((query, [username]))
+        if db.sql_query(_bp, query, [username]):
             flash("Username already exists.", "danger")
         else:
-            db.sql_insert(_bp, "INSERT INTO users (username, password) VALUES (?, ?)", [
-                          username, password])
+            query = "INSERT INTO users (username, password) VALUES (?, ?)"
+            params = [username, password]
+            _query.append((query, params))
+            db.sql_insert(_bp, query, params)
             return redirect(url_for(f"{_bp}.login"))
     return render_template(f"{_templ}/registration.html")
 
@@ -110,24 +125,36 @@ def home():
 @challenge3.route("/notes", methods=["GET", "POST"])
 @login_required
 def notes():
-    user = db.sql_query(_bp, "SELECT username FROM users WHERE id=?",
-                        [session[f"{_bp}_user_id"]], one=True)
+    global _query
+
+    query = "SELECT username FROM users WHERE id=?"
+    params = [session[f"{_bp}_user_id"]]
+    _query.append((query, params))
+    user = db.sql_query(_bp, query, params, one=True)
 
     if request.method == "POST":
         title = request.form["title"]
         note = request.form["note"]
-        db.sql_insert(_bp, "INSERT INTO notes (username, title, note) VALUES (?, ?, ?)",
-                      [user["username"], title, note])
+
+        query = "INSERT INTO notes (username, title, note) VALUES (?, ?, ?)"
+        params = [user["username"], title, note]
+        _query.append((query, params))
+
+        db.sql_insert(_bp, query, params)
         return redirect(url_for(f"{_bp}.notes"))
 
-    notes = db.sql_query(_bp,
-                         f"SELECT title, note FROM notes WHERE username = ?", [user['username']])
+    query = f"SELECT title, note FROM notes WHERE username = ?"
+    params = [user['username']]
+    _query.append((query, params))
+    notes = db.sql_query(_bp, query, params)
     return render_template(f"{_templ}/notes.html", notes=notes, user=user["username"])
 
 
 @challenge3.route("/changepwd", methods=["GET", "POST"])
 @login_required
 def changepwd():
+    global _query
+
     if request.method == "POST":
         current_pwd = request.form["current-password"]
         new_pwd = request.form["password"]
@@ -137,15 +164,18 @@ def changepwd():
             flash("Passwords doesn't match.")
             return redirect(url_for(f"{_bp}.changepwd"))
 
-        user = db.sql_query(_bp, "SELECT username, password FROM users WHERE id = ?",
-                            [session[f"{_bp}_user_id"]], one=True)
+        query = "SELECT username, password FROM users WHERE id = ?"
+        params = [session[f"{_bp}_user_id"]]
+        _query.append((query, params))
+        user = db.sql_query(_bp, query, params, one=True)
 
         if not (current_pwd == user["password"]):
             flash("Wrong password supplied.", "danger")
             return redirect(url_for(f"{_bp}.changepwd"))
 
-        db.sql_insert(
-            _bp, f"UPDATE users SET password = ? WHERE username = '{user['username']}'", [new_pwd])
+        query = f"UPDATE users SET password = ? WHERE username = '{user['username']}'"
+        _query.append(query)
+        db.sql_insert(_bp, query, [new_pwd])
         flash("Password changed", "info")
         return redirect(url_for(f"{_bp}.changepwd"))
     return render_template(f"{_templ}/updatepwd.html")
