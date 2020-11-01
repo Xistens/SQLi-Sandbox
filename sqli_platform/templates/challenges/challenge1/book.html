@@ -1,0 +1,28 @@
+{% extends "challenges/challenge1/layout.html" %}
+{% block title %}Home{% endblock %}
+{% block body %}
+<!-- Begin Page Content -->
+<div class="container main pb">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <form class="form-inline d-flex justify-content-center md-form form-sm mt-0" action="{{ url_for('.book') }}" method="get">
+                <i class="fas fa-search" aria-hidden="true"></i>
+                <input class="form-control form-control-sm ml-3 w-75" name="title" type="text" placeholder="Search" aria-label="Search">
+            </form>
+        </div>
+        <div class="card-body">
+            {% for result in data %}
+                <h4>Title: {{ result["title"] }}</h4>
+                <p>{{ result["description"] }}</p>
+                <p>Author: {{ result["author"] }}</p>
+            {% endfor %}
+        </div>
+    </div>
+</div><!-- /.container -->
+</div><!-- End of wrapper -->
+
+{% include 'footer.html' %}
+</body>
+
+</html>
+{% endblock %}
