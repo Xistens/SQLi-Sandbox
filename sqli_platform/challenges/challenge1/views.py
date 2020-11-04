@@ -49,7 +49,8 @@ def sessions():
         csession = session.get(f"{_bp}_user_id", None),
         csession_name=session.get(f"{_bp}_username", None),
         ctitle=get_config(f"{_bp}", "title"),
-        query=format_query(_query)
+        query=format_query(_query),
+        slides="challenge1/slides/slides.html"
     )
     _query = []
     return d
@@ -93,7 +94,7 @@ def login():
             return redirect(url_for(f"{_bp}.home"))
         else:
             flash("Invalid username or password.", "danger")
-    return render_template(f"{_templ}/login.html")
+    return render_template(f"{_templ}/login.html", slide_num=0)
 
 
 @challenge1.route("/signup", methods=["GET", "POST"])

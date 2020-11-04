@@ -1,11 +1,46 @@
-
-<footer class="footer bg-light">
+{% if not isIndex %}
+<footer class="footer bg-light overflow-auto">
     <div class="container">
         <div class="card">
             <div class="card-header text-center">Executed Query:</div>
             <div class="card-body">
-                <pre class="pre-scrollable">{{ query }}</pre>
+                {% if query %}
+                <pre class="pre-scrollable"><code class="sql">{{ query }}</code></pre>
+                {% endif %}
+            </div>
+        </div>
+        <div class="card" style="width:100%;height:250px;">
+            <div class="reveal">
+                <!-- <div class="slides">
+                    <section>Slide 1</section>
+                    <section>Slide 2</section>
+                </div> -->
+                {% if slides %}
+                    {% include slides ignore missing %}
+                {% endif %}
             </div>
         </div>
     </div>
 </footer>
+
+<script src="{{ url_for('static', filename='dist/reveal.js') }}"></script>
+<script src="{{ url_for('static', filename='plugin/notes/notes.js') }}"></script>
+<script src="{{ url_for('static', filename='plugin/markdown/markdown.js') }}"></script>
+<script src="{{ url_for('static', filename='plugin/highlight/highlight.js') }}"></script>
+<!-- <script src="{{ url_for('static', filename='js/highlight.min.js') }}"></script> -->
+<script>
+    Reveal.initialize({
+        hash: true,
+        embedded: false,
+        width: "100%",
+        height: "100%",
+        margin: 0,
+        // minScale: 1,
+        maxScale: 0.8,
+
+        plugins: [RevealMarkdown, RevealHighlight, RevealNotes]
+    });
+    Reveal.slide({{ slide_num if slide_num else 0 }});
+</script>
+<!-- <script>hljs.initHighlightingOnLoad();</script> -->
+{% endif %}

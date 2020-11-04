@@ -2,14 +2,12 @@
     width: 340px;
     margin: 50px auto;
 }
-
 .login-form form {
     margin-bottom: 15px;
     background: #f8f9fc;
     /* box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3); */
     padding: 30px;
 }
-
 .login-form h2 {
     margin: 0 0 15px;
 }
@@ -49,10 +47,6 @@
     padding-top: 1.5em;
 }
 
-.footer {
-    height: 800px;
-}
-
 
 .diff-easy {
     color: #9acc14;
@@ -89,3 +83,12 @@
   color: inherit;
   text-decoration: inherit;
 }
+
+.reveal p {
+    font-size: 25px !important;
+}
+
+
+/* .footer {
+    height: 500px;
+} */

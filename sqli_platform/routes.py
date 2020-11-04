@@ -32,4 +32,4 @@ def index():
         newlist = sorted(tmp, key=lambda k: k["position"])
         obj[i] = newlist
             
-    return render_template("index.html", tracks=obj)
+    return render_template("index.html", tracks=obj, isIndex=True)
