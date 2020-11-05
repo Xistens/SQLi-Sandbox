@@ -85,10 +85,9 @@
 }
 
 .reveal p {
-    font-size: 25px !important;
+    font-size: 20px !important;
 }
 
-
-/* .footer {
-    height: 500px;
-} */
+.reveal pre {
+    font-size: 15px !important;
+}

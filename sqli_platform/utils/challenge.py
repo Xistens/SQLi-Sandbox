@@ -60,11 +60,13 @@ def format_query(queries: list = []) -> str:
     Return:
         string:       (str) The formatted output
     """
-    string = ""
+    data = []
     for item in queries:
         if type(item) is tuple:
             params = ', '.join(str(i) for i in item[1])
-            string += f"Query: {item[0]}\nParameters: {params}\n"
+            #string += f"Query: {item[0]}\nParameters: {params}\n"
+            data.append((item[0], params))
         else:
-            string += f"Query: {item}\n"
-    return string
+            #string += f"Query: {item}\n"
+            data.append((item,))
+    return data

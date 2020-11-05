@@ -1,20 +1,16 @@
 {% if not isIndex %}
 <footer class="footer bg-light overflow-auto">
-    <div class="container">
+    <div class="container main">
+        {% if query %}
         <div class="card">
             <div class="card-header text-center">Executed Query:</div>
             <div class="card-body">
-                {% if query %}
-                <pre class="pre-scrollable"><code class="sql">{{ query }}</code></pre>
-                {% endif %}
+                <pre>{% for i in range(query|length) %}Query {{i+1}}:<code class="sql">{{ query[i][0] }}</code>{% if query[i][1] %} Parameters:<code>{{query[i][1]}}</code>{% endif %}{% endfor %}</pre>
             </div>
         </div>
-        <div class="card" style="width:100%;height:250px;">
+        {% endif %}
+        <div class="card b-offset" style="width:100%;height:300px;">
             <div class="reveal">
-                <!-- <div class="slides">
-                    <section>Slide 1</section>
-                    <section>Slide 2</section>
-                </div> -->
                 {% if slides %}
                     {% include slides ignore missing %}
                 {% endif %}
@@ -24,23 +20,36 @@
 </footer>
 
 <script src="{{ url_for('static', filename='dist/reveal.js') }}"></script>
-<script src="{{ url_for('static', filename='plugin/notes/notes.js') }}"></script>
-<script src="{{ url_for('static', filename='plugin/markdown/markdown.js') }}"></script>
 <script src="{{ url_for('static', filename='plugin/highlight/highlight.js') }}"></script>
-<!-- <script src="{{ url_for('static', filename='js/highlight.min.js') }}"></script> -->
+<script src="{{ url_for('static', filename='js/highlight.min.js') }}"></script>
 <script>
     Reveal.initialize({
         hash: true,
-        embedded: false,
+        embedded: true,
         width: "100%",
         height: "100%",
         margin: 0,
-        // minScale: 1,
-        maxScale: 0.8,
+        minScale: 1,
+        maxScale: 1,
 
-        plugins: [RevealMarkdown, RevealHighlight, RevealNotes]
+        plugins: [RevealHighlight]
     });
-    Reveal.slide({{ slide_num if slide_num else 0 }});
+    
+    function getCookie(name) {
+        // https://stackoverflow.com/questions/10730362/get-cookie-by-name
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+    }
+
+    Reveal.on("slidechanged", event => {
+        console.log(event.indexh);
+        document.cookie="{{cname}}_slide=" + event.indexh + ";path=/";
+    });
+    const cookieValue = getCookie("{{cname}}_slide");
+    if (cookieValue) {
+        Reveal.slide(cookieValue);
+    }
 </script>
-<!-- <script>hljs.initHighlightingOnLoad();</script> -->
+<script>hljs.initHighlightingOnLoad();</script>
 {% endif %}

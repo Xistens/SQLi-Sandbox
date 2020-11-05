@@ -1,10 +1,32 @@
 <div class="slides">
     <section>
-        <p>By logging in to the system, the query looks like:</p>
-        <pre><code data-trim data-noescape data-line-numbers="2">
+        <p>When a user tries to log in, the application performs the following query:</p>
+        <pre><code data-trim data-noescape>
+                SELECT id, username FROM users WHERE 
+                    username = '" + username + "' AND password = '" + password + "'
+        </code></pre>
+        <p>
+            If the query returns data, then the login was successful. As can be seen above, the username and password parameter is
+            concatenated directly into the SQL query, making it vulnerable to SQL injection.
+        </p>
+    </section>
+    <section>
+        <p>It is possible to bypass the login by using <code>' OR 1=1--</code> as a username. This causes the application to perform the following query:</p>
+        <pre><code data-trim data-noescape data-line-numbers="1-2">
         SELECT id, username FROM users WHERE 
-            username = 'dev' AND password = 'asd'
+            username = '' OR 1=1-- AND password = 'asd'
+        </code></pre>
+        <p>Because of the comment symbol(--) , this is equivalent to the query below, which will return all users.</p>
+        <pre><code data-trim data-noescape data-line-numbers="2">
+        SELECT id, username FROM users WHERE username = '' OR 1=1
         </code></pre>
     </section>
-    <section>Slide 2</section>
+    <section>
+        <p>Another example of bypassing the login is to use <code>admin'--</code> as the username, which will comment out the
+        password check and let the user log in as admin. The query would then look as follows:</p>
+        <pre><code data-trim data-noescape data-line-numbers="1-2">
+            SELECT id, username FROM users WHERE 
+                username = 'admin'-- AND password = 'asd'
+            </code></pre>
+    </section>
 </div>

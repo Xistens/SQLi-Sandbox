@@ -35,6 +35,7 @@ def sessions():
     """
     global _query
     d = dict(
+        cname=_bp,
         csession=session.get(f"{_bp}_user_id", None),
         csession_name=session.get(f"{_bp}_username", None),
         ctitle=get_config(f"{_bp}", "title"),
@@ -120,7 +121,7 @@ def notes():
 
     query = "SELECT username FROM users WHERE id=?"
     params = [session[f"{_bp}_user_id"]]
-    _query.append((query, params))
+    #_query.append((query, params))
     user = db.sql_query(_bp, query, params, one=True)
 
     if request.method == "POST":

@@ -34,12 +34,12 @@ SELECT id, username FROM users WHERE username = '-1747' OR SUBSTR((SELECT COALES
 
 """
 
-_bp = "challenge1"
-challenge1 = Blueprint(_bp , __name__, template_folder='templates', url_prefix=f"/{_bp}")
+_bp = "challenge6"
+challenge6 = Blueprint(_bp , __name__, template_folder='templates', url_prefix=f"/{_bp}")
 _templ = "challenges/challenge1"
 _query = []
 
-@challenge1.context_processor
+@challenge6.context_processor
 def sessions():
     """
     
@@ -47,7 +47,7 @@ def sessions():
     global _query
     d = dict(
         cname=_bp,
-        csession=session.get(f"{_bp}_user_id", None),
+        csession = session.get(f"{_bp}_user_id", None),
         csession_name=session.get(f"{_bp}_username", None),
         ctitle=get_config(f"{_bp}", "title"),
         query=format_query(_query),
@@ -65,8 +65,8 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
-@challenge1.route("/")
-@challenge1.route("/login", methods=["GET", "POST"])
+@challenge6.route("/")
+@challenge6.route("/login", methods=["GET", "POST"])
 def login():
     global _query
 
@@ -88,17 +88,22 @@ def login():
                 data.append([x for x in row])
             app_log.debug(data)
             session[f"{_bp}_user_id"] = data[0][0]
-            session[f"{_bp}_username"] = data[0][1]
+
+            # Get clean username. The name field is not a part of this challenge
+            clean = f"SELECT username FROM users WHERE username = ? AND password = ?"
+            clean_data = db.sql_query(_bp, clean, [username, password], one=True)
+
+            session[f"{_bp}_username"] = clean_data["username"] if clean_data else "Unkown"
             session[f"{_bp}_userobj"] = data
             app_log.debug(
-                f"challenge2 user login: Session: {session[f'{_bp}_user_id']} {session['challenge1_userobj']}")
+                f"{_bp} user login: Session: {session[f'{_bp}_user_id']} {session[f'{_bp}_userobj']}")
             return redirect(url_for(f"{_bp}.home"))
         else:
             flash("Invalid username or password.", "danger")
     return render_template(f"{_templ}/login.html", slide_num=0)
 
 
-@challenge1.route("/signup", methods=["GET", "POST"])
+@challenge6.route("/signup", methods=["GET", "POST"])
 def signup():
     global _query
 
@@ -124,31 +129,27 @@ def signup():
     return render_template(f"{_templ}/registration.html")
 
 
-@challenge1.route("/home")
+@challenge6.route("/home")
 @login_required
 def home():
-    sess = session.get(f"{_bp}_user_id", None)
-    f = ""
-    if sess == 1:
-        f = get_flag(_bp)
-    return render_template(f"{_bp}/index.html", flag=f)
+    return render_template(f"{_bp}/index.html")
 
 
-@challenge1.route("/notes", methods=["GET", "POST"])
+@challenge6.route("/notes", methods=["GET", "POST"])
 @login_required
 def notes():
     flash("Not Implemented ", "warning")
     return render_template(f"{_templ}/notes.html")
 
 
-@challenge1.route("/changepwd", methods=["GET", "POST"])
+@challenge6.route("/changepwd", methods=["GET", "POST"])
 @login_required
 def changepwd():
     flash("Not Implemented ", "warning")
     return render_template(f"{_templ}/updatepwd.html")
 
 
-@challenge1.route("/logout")
+@challenge6.route("/logout")
 def logout():
     session.clear()
     return redirect(url_for(f"{_bp}.login"))

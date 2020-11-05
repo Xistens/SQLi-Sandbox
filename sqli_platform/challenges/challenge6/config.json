@@ -1,0 +1,16 @@
+{
+    "name": "challenge6",
+    "title": "Blind Password",
+    "category": "Web",
+    "tags": ["SQL Injection"],
+    "difficulty": "medium",
+    "description": "Retrieve the admin password",
+    "flag": "THM{Blind}",
+    "database": {
+        "drivername": "sqlite"
+    },
+    "track": {
+        "track_id": 1,
+        "position_in_track": 6
+    }
+}
