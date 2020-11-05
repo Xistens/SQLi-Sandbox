@@ -70,7 +70,7 @@ def get_challenge_configs(path: str, config: list) -> list:
     return configs
 
 
-def load_blueprints(app, configs: list):
+def load_blueprints(app, limiter, configs: list):
     """
     Imports challenges modules and registers their blueprints
 
@@ -84,7 +84,13 @@ def load_blueprints(app, configs: list):
         - Add error handling?
     """
     for conf in configs:
-       module = importlib.import_module(
-           f"{conf['path']}.views", package='sqli_platform')
-       app.register_blueprint(getattr(module, conf['config']['name']))
+        module = importlib.import_module(
+            f"{conf['path']}.views", package="sqli_platform")
+        
+        # Get blueprint
+        bp = getattr(module, conf["config"]["name"])
+
+        if "limiter" in conf["config"]:
+            limiter.limit(conf["config"]["limiter"])(bp)
+        app.register_blueprint(bp)
 

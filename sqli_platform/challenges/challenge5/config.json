@@ -8,6 +8,7 @@
     "difficulty": "Hard",
     "description": "The book function has received some updates; find a way to exploit it.",
     "flag": "THM{BEssk6Rjpfa95Te48GfzBS8YUjyMF9sc}",
+    "limiter": "50/minute;1/second",
     "database": {
         "drivername": "sqlite"
     },

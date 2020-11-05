@@ -1,2 +1,3 @@
 Flask
 flask-restx
+Flask-Limiter

@@ -4,9 +4,8 @@ import logging
 import sqli_platform.utils as utils
 import sqli_platform.utils.logger as logger
 from flask import Flask, g
-from sqlalchemy_utils import database_exists as database_exists_util
-from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.orm import sessionmaker
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 
 _basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -16,13 +15,11 @@ _challenges_path = f'{_basedir}/challenges'
 # Name of the config file for a challenge
 _challenge_config = 'config.json'
 
-# The name of the main application's database file (SQLite3)
-DATABASE = "database.db"
-
 app = Flask(__name__)
 app.debug = True
 # Change me
 app.secret_key = b"dummy_key"
+limiter = Limiter(app, default_limits=[], key_func=get_remote_address)
 
 # Temp logging directory, remember to change?
 app.config['LOG_FOLDER'] = f'{_basedir}/logs'
@@ -46,8 +43,7 @@ from sqli_platform.api import api
 app.register_blueprint(api)
 
 # Import challenges modules and register their blueprints
-utils.load_blueprints(app, _configs)
-
+utils.load_blueprints(app, limiter, _configs)
 
 
 from sqli_platform import routes

@@ -8,6 +8,7 @@
     "difficulty": "medium",
     "description": "All the previous vulnerabilities are patched, but the developers have added a new Book feature.",
     "flag": "THM{5ydwrc97LfZZqsxBVNBJHTAYNvExnYPQ}",
+    "limiter": "50/minute;1/second",
     "database": {
         "drivername": "sqlite"
     },
