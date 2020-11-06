@@ -1,14 +1,13 @@
 {
     "name": "challenge4",
-    "title": "Plenty of Books",
+    "title": "Vulnerable Notes",
     "category": "Web",
     "tags": [
         "SQL Injection"
     ],
     "difficulty": "medium",
-    "description": "All the previous vulnerabilities are patched, but the developers have added a new Book feature.",
-    "flag": "THM{5ydwrc97LfZZqsxBVNBJHTAYNvExnYPQ}",
-    "limiter": "50/minute;1/second",
+    "description": "The login function has been patched, but the note function has been enabled. Find a way to dump the database and retrieve the flag.",
+    "flag": "THM{FLAGCHALLENGE2}",
     "database": {
         "drivername": "sqlite"
     },

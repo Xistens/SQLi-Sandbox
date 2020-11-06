@@ -10,23 +10,21 @@ from flask import (
     request,
     flash
 )
-from sqli_platform import app, app_log, db
-from sqli_platform.utils.challenge import get_config, format_query
+from sqli_platform import (app, clog, db)
+from sqli_platform.utils.challenge import (get_flag, get_config, format_query)
 
 """
-The login function has been patched.
-The developers have added the note function, it is not directly vulnerable.
+Dump passwords to get flag:
+' UNION SELECT 1,group_concat(password) from users--
 
-Signup:
-' union select 1,2'
-' union select 1,group_concat(tbl_name) from sqlite_master where type='table' and tbl_name not like 'sqlite_%''
+This was also possible from challenge 1: Flask Session Cookie decode:
+https://www.kirsle.net/wizards/flask-session.cgi
 """
 
 _bp = "challenge2"
-challenge2 = Blueprint(_bp, __name__, template_folder="templates", url_prefix=f"/{_bp}")
+challenge2 = Blueprint(_bp , __name__, template_folder='templates', url_prefix=f"/{_bp}")
 _templ = "challenges/challenge1"
 _query = []
-
 
 @challenge2.context_processor
 def sessions():
@@ -39,7 +37,8 @@ def sessions():
         csession=session.get(f"{_bp}_user_id", None),
         csession_name=session.get(f"{_bp}_username", None),
         ctitle=get_config(f"{_bp}", "title"),
-        query=format_query(_query)
+        query=format_query(_query),
+        slides="challenge2/slides/slides.html"
     )
     _query = []
     return d
@@ -53,7 +52,6 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
-
 @challenge2.route("/")
 @challenge2.route("/login", methods=["GET", "POST"])
 def login():
@@ -65,21 +63,27 @@ def login():
 
         if not (username and password):
             flash("Username or Password cannot be empty.", "warning")
-            return redirect(url_for("challenge2.login"))
-
-        query = "SELECT id, username FROM users WHERE username = ? AND password = ?"
-        params = [username, password]
-        _query.append((query, params))
-
-        user = db.sql_query(_bp, query, params, one=True)
-
+            return redirect(url_for(f"{_bp}.login"))
+        
+        query = f"SELECT id, username FROM users WHERE username = '{username}' AND password = '{password}'"
+        _query.append(query)
+        user = db.sql_query(_bp, query)
+        
         if user:
-            session[f"{_bp}_user_id"] = user["id"]
-            session[f"{_bp}_username"] = user["username"]
+            data = []
+            for row in user:
+                data.append([x for x in row])
+            
+            # User can decode the cookie to get the flag
+            session[f"{_bp}_user_id"] = data[0][0]
+            session[f"{_bp}_username"] = data[0][1]
+            session[f"{_bp}_userobj"] = data
+
+            clog.debug(f"{_bp} login: Session: {session[f'{_bp}_user_id']} {session[f'{_bp}_userobj']}")
             return redirect(url_for(f"{_bp}.home"))
         else:
             flash("Invalid username or password.", "danger")
-    return render_template(f"{_templ}/login.html")
+    return render_template(f"{_templ}/login.html", slide_num=0)
 
 
 @challenge2.route("/signup", methods=["GET", "POST"])
@@ -92,7 +96,7 @@ def signup():
 
         if not (username and password):
             flash("Username or Password cannot be empty.")
-            return redirect(url_for("challenge2.signup"))
+            return redirect(url_for(f"{_bp}.signup"))
 
         # No error checking etc...
         query = "SELECT username FROM users WHERE username=?"
@@ -104,6 +108,7 @@ def signup():
             params = [username, password]
             _query.append((query, params))
             db.sql_insert(_bp, query, params)
+            clog.info(f"{_bp} - signup: {username} {password}")
             return redirect(url_for(f"{_bp}.login"))
     return render_template(f"{_templ}/registration.html")
 
@@ -111,34 +116,14 @@ def signup():
 @challenge2.route("/home")
 @login_required
 def home():
-    return render_template(f"{_templ}/index.html")
+    return render_template(f"{_bp}/index.html")
 
 
 @challenge2.route("/notes", methods=["GET", "POST"])
 @login_required
 def notes():
-    global _query
-
-    query = "SELECT username FROM users WHERE id=?"
-    params = [session[f"{_bp}_user_id"]]
-    #_query.append((query, params))
-    user = db.sql_query(_bp, query, params, one=True)
-
-    if request.method == "POST":
-        title = request.form["title"]
-        note = request.form["note"]
-
-        query = "INSERT INTO notes (username, title, note) VALUES (?, ?, ?)"
-        params = [user["username"], title, note]
-        _query.append((query, params))
-
-        db.sql_insert(_bp, query, params)
-        return redirect(url_for(f"{_bp}.notes"))
-
-    query = f"SELECT title, note FROM notes WHERE username = '{user['username']}'"
-    _query.append(query)
-    notes = db.sql_query(_bp, query)
-    return render_template(f"{_templ}/notes.html", notes=notes, user=user["username"])
+    flash("Not Implemented ", "warning")
+    return render_template(f"{_templ}/notes.html")
 
 
 @challenge2.route("/changepwd", methods=["GET", "POST"])

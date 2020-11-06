@@ -1,11 +1,14 @@
 {
     "name": "challenge6",
-    "title": "Blind Password",
+    "title": "Plenty of Books",
     "category": "Web",
-    "tags": ["SQL Injection"],
+    "tags": [
+        "SQL Injection"
+    ],
     "difficulty": "medium",
-    "description": "Retrieve the admin password",
-    "flag": "THM{Blind}",
+    "description": "All the previous vulnerabilities are patched, but the developers have added a new Book feature.",
+    "flag": "THM{5ydwrc97LfZZqsxBVNBJHTAYNvExnYPQ}",
+    "limiter": "50/minute;1/second",
     "database": {
         "drivername": "sqlite"
     },

@@ -10,12 +10,8 @@ from flask import (
     request,
     flash
 )
-from sqli_platform import app, app_log, db
-from sqli_platform.utils.challenge import (
-    get_flag,
-    get_config,
-    format_query
-)
+from sqli_platform import (app, clog, db)
+from sqli_platform.utils.challenge import (get_flag, get_config, format_query)
 
 """
 Flag1 - Login as admin
@@ -86,12 +82,15 @@ def login():
             data = []
             for row in user:
                 data.append([x for x in row])
-            app_log.debug(data)
             session[f"{_bp}_user_id"] = data[0][0]
-            session[f"{_bp}_username"] = data[0][1]
+            # Get clean username. The name field is not a part of this challenge
+            clean = f"SELECT username FROM users WHERE username = ? AND password = ?"
+            clean_data = db.sql_query(
+                _bp, clean, [username, password], one=True)
+
+            session[f"{_bp}_username"] = clean_data["username"] if clean_data else "Unkown"
             session[f"{_bp}_userobj"] = data
-            app_log.debug(
-                f"challenge2 user login: Session: {session[f'{_bp}_user_id']} {session['challenge1_userobj']}")
+            clog.debug(f"{_bp} login: Session: {session[f'{_bp}_user_id']} {session['challenge1_userobj']}")
             return redirect(url_for(f"{_bp}.home"))
         else:
             flash("Invalid username or password.", "danger")
@@ -120,6 +119,7 @@ def signup():
             params = [username, password]
             _query.append((query, params))
             db.sql_insert(_bp, query, params)
+            clog.info(f"{_bp} - signup: {username} {password}")
             return redirect(url_for(f"{_bp}.login"))
     return render_template(f"{_templ}/registration.html")
 
@@ -131,6 +131,7 @@ def home():
     f = ""
     if sess == 1:
         f = get_flag(_bp)
+        clog.info(f"{_bp} - flag: {f}")
     return render_template(f"{_bp}/index.html", flag=f)
 
 

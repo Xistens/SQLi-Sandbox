@@ -38,7 +38,7 @@ def get_directories(path: str, blacklist: list = ["__pycache__"]) -> list:
     return dirs
 
 
-def get_challenge_configs(path: str, config: list) -> list:
+def get_challenge_configs(path: str, config: str) -> list:
     """
     Loads all configs from challenges into memory to be used 
     to dynamically load blueprints.
@@ -78,7 +78,9 @@ def load_blueprints(app, limiter, configs: list):
     then registers the blueprints from that module
 
     Args:
-        app:    (flask.app.Flask)
+        app:        (flask.app.Flask)
+        limiter:    (class 'flask_limiter.extension.Limiter')
+        configs:    (list) List containing configurations of all challenges
 
     TODO:
         - Add error handling?

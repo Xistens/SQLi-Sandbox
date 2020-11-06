@@ -1,14 +1,13 @@
 {
     "name": "challenge5",
-    "title": "Plenty of Books2",
+    "title": "Update Password",
     "category": "Web",
     "tags": [
         "SQL Injection"
     ],
-    "difficulty": "Hard",
-    "description": "The book function has received some updates; find a way to exploit it.",
-    "flag": "THM{BEssk6Rjpfa95Te48GfzBS8YUjyMF9sc}",
-    "limiter": "50/minute;1/second",
+    "difficulty": "medium",
+    "description": "The developers have patched the login and note function. They also enabled the update password function and would like you to test it.",
+    "flag": "THM{CHALLENGE3FLAG}",
     "database": {
         "drivername": "sqlite"
     },

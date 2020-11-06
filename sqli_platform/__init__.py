@@ -28,6 +28,7 @@ app.config['LOG_FOLDER'] = f'{_basedir}/logs'
 # Configure logging
 logger.init_logs(app)
 app_log = logging.getLogger("mainapp")
+clog = logging.getLogger("challenges")
 app_log.debug("Initializing loggers")
 
 # Load configs from all challenges into memory

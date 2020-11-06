@@ -31,6 +31,7 @@
         margin: 0,
         minScale: 1,
         maxScale: 1,
+        slideNumber: "c/t",
 
         plugins: [RevealHighlight]
     });
@@ -43,7 +44,6 @@
     }
 
     Reveal.on("slidechanged", event => {
-        console.log(event.indexh);
         document.cookie="{{cname}}_slide=" + event.indexh + ";path=/";
     });
     const cookieValue = getCookie("{{cname}}_slide");

@@ -1,13 +1,11 @@
 {
     "name": "challenge3",
-    "title": "Update Password",
+    "title": "Blind Password",
     "category": "Web",
-    "tags": [
-        "SQL Injection"
-    ],
+    "tags": ["SQL Injection"],
     "difficulty": "medium",
-    "description": "The developers have patched the login and note function. They also enabled the update password function and would like you to test it.",
-    "flag": "THM{CHALLENGE3FLAG}",
+    "description": "Retrieve the admin password",
+    "flag": "THM{Blind}",
     "database": {
         "drivername": "sqlite"
     },
