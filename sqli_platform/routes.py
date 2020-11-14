@@ -1,5 +1,6 @@
+import json
 from flask import (
-    render_template, Blueprint, abort
+    render_template, Blueprint, abort, request
 )
 from jinja2 import TemplateNotFound
 from sqli_platform import *
@@ -33,3 +34,22 @@ def index():
         obj[i] = newlist
             
     return render_template("index.html", tracks=obj, isIndex=True)
+
+
+@app.route('/settings', methods=["POST"])
+def settings():
+    """
+    This view receives the JSON data from the settings via the ajax call
+    on the main page/landing page and will update the settings for
+    the current session.
+    """
+    if request.method == "POST":
+        data = json.loads(request.data)
+        whitelist = ["query", "guidance"]
+        
+        conf = data.get("id", None)
+        value = data.get("value", False)
+        if conf in whitelist:
+            status = True if value else False
+            print(f"{conf}: {value}")
+        return {"Status": "Success"}

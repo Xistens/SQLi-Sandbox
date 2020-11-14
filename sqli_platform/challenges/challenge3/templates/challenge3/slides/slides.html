@@ -1,10 +1,10 @@
 <div class="slides">
-    <section>
-        <p>By logging in to the system, the query looks like:</p>
-        <pre><code data-trim data-noescape data-line-numbers="2">
-        SELECT id, username FROM users WHERE 
-            username = 'dev' AND password = 'asd'
-        </code></pre>
+    {% if cdesc %}
+    <section class="desc-slide">
+        <h2>Goal:</h2>
+        <p>{{ cdesc }}</p>
     </section>
-    <section>Slide 2</section>
+    {% endif %}
+    <section>
+    </section>
 </div>

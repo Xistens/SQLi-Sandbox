@@ -1,4 +1,10 @@
 <div class="slides">
+    {% if cdesc %}
+    <section class="desc-slide">
+        <h2>Goal:</h2>
+        <p>{{ cdesc }}</p>
+    </section>
+    {% endif %}
     <section>
         <p>When a user tries to log in, the application performs the following query:</p>
         <pre><code data-trim data-noescape>

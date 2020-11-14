@@ -47,7 +47,8 @@ def sessions():
         csession_name=session.get(f"{_bp}_username", None),
         ctitle=get_config(f"{_bp}", "title"),
         query=format_query(_query),
-        slides="challenge1/slides/slides.html"
+        slides=f"{_bp}/slides/slides.html",
+        cdesc=get_config(f"{_bp}", "description")
     )
     _query = []
     return d
@@ -88,7 +89,7 @@ def login():
             clean_data = db.sql_query(
                 _bp, clean, [username, password], one=True)
 
-            session[f"{_bp}_username"] = clean_data["username"] if clean_data else "Unkown"
+            session[f"{_bp}_username"] = clean_data["username"][:30] if clean_data else "Unkown"
             session[f"{_bp}_userobj"] = data
             clog.debug(f"{_bp} login: Session: {session[f'{_bp}_user_id']} {session['challenge1_userobj']}")
             return redirect(url_for(f"{_bp}.home"))

@@ -91,3 +91,13 @@
 .reveal pre {
     font-size: 15px !important;
 }
+
+.reveal .desc-slide h1{
+    font-size: 40px !important;
+}
+.reveal .desc-slide h2{
+    font-size: 30px !important;
+}
+.reveal li {
+    font-size: 20px !important;
+}

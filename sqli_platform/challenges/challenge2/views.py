@@ -15,7 +15,7 @@ from sqli_platform.utils.challenge import (get_flag, get_config, format_query)
 
 """
 Dump passwords to get flag:
-' UNION SELECT 1,group_concat(password) from users--
+' UNION SELECT 1,group_concat(password) FROM users--
 
 This was also possible from challenge 1: Flask Session Cookie decode:
 https://www.kirsle.net/wizards/flask-session.cgi
@@ -38,7 +38,8 @@ def sessions():
         csession_name=session.get(f"{_bp}_username", None),
         ctitle=get_config(f"{_bp}", "title"),
         query=format_query(_query),
-        slides="challenge2/slides/slides.html"
+        slides=f"{_bp}/slides/slides.html",
+        cdesc=get_config(f"{_bp}", "description")
     )
     _query = []
     return d
@@ -77,9 +78,8 @@ def login():
             # User can decode the cookie to get the flag
             session[f"{_bp}_user_id"] = data[0][0]
             session[f"{_bp}_username"] = data[0][1]
-            session[f"{_bp}_userobj"] = data
 
-            clog.debug(f"{_bp} login: Session: {session[f'{_bp}_user_id']} {session[f'{_bp}_userobj']}")
+            clog.debug(f"{_bp} login: Session: {session[f'{_bp}_user_id']}")
             return redirect(url_for(f"{_bp}.home"))
         else:
             flash("Invalid username or password.", "danger")

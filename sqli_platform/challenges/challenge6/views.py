@@ -76,7 +76,7 @@ def login():
 
         if user:
             session[f"{_bp}_user_id"] = user["id"]
-            session[f"{_bp}_username"] = user["username"]
+            session[f"{_bp}_username"] = user["username"][:30]
             return redirect(url_for(f"{_bp}.home"))
         else:
             flash("Invalid username or password.", "danger")

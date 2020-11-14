@@ -1,32 +1,28 @@
 <div class="slides">
+    {% if cdesc %}
+    <section class="desc-slide">
+        <h2>Goal:</h2>
+        <p>{{ cdesc }}</p>
+    </section>
+    {% endif %}
     <section>
-        <p>When a user tries to log in, the application performs the following query:</p>
-        <pre><code data-trim data-noescape>
-                SELECT id, username FROM users WHERE 
-                    username = '" + username + "' AND password = '" + password + "'
-        </code></pre>
-        <p>
-            If the query returns data, then the login was successful. As can be seen above, the username and password parameter is
-            concatenated directly into the SQL query, potentially making it vulnerable to SQL injection.
-        </p>
+<p>
+The login form is vulnerable to SQL injection, and it is possible to bypass the login by using <code>' OR 1=1--</code>
+as a username.
+</p> 
+<p>
+Before we can dump all the passwords, we need to identify places on the page where data from the login
+query is used. After logging in, the name of the currently logged-on user is displayed in the top right corner, and it might
+be possible to dump the data there or in the session cookie. A UNION based injection will be used to dump the passwords.
+</p>
     </section>
     <section>
-        <p>It is possible to bypass the login by using <code>' OR 1=1--</code> as a username. This causes the application to perform the following query:</p>
-        <pre><code data-trim data-noescape data-line-numbers="1-2">
-        SELECT id, username FROM users WHERE 
-            username = '' OR 1=1-- AND password = 'asd'
-        </code></pre>
-        <p>Because of the comment symbol(--) , this is equivalent to the query below, which will return all users.</p>
-        <pre><code data-trim data-noescape data-line-numbers="2">
-        SELECT id, username FROM users WHERE username = '' OR 1=1
-        </code></pre>
-    </section>
-    <section>
-        <p>Another example of bypassing the login is to use <code>admin'--</code> as the username, which will comment out the
-        password check and let the user log in as admin. The query would then look as follows:</p>
-        <pre><code data-trim data-noescape data-line-numbers="1-2">
-            SELECT id, username FROM users WHERE 
-                username = 'admin'-- AND password = 'asd'
-            </code></pre>
+<p>
+There are two key requirements that must be met for a UNION based injection to work:
+<ul>
+    <li>The number of columns in the injected query must be the same as in the original query</li>
+    <li>The data types for each column must match the corresponding type</li>
+</ul>
+</p>
     </section>
 </div>
