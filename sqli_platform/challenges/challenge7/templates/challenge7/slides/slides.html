@@ -1,0 +1,81 @@
+<div class="slides">
+    {% if cdesc %}
+    <section class="desc-slide">
+        <h2>Goal:</h2>
+        <p>{{ cdesc }}</p>
+    </section>
+    {% endif %}
+<section>
+<p>
+When searching for a book title, the web page performs a GET request. The application then performs two queries where the first query gets the book’s ID, then later on in the process, a new SQL query is performed to get all information about the book. The two queries can be seen here:
+</p>
+<pre class="python"><code data-trim data-noescape>
+bid = db.sql_query(f"SELECT id FROM books WHERE title like '{title}%'", one=True)
+if bid:
+    query = f"SELECT * FROM books WHERE id = '{bid['id']}'"
+</code></pre>
+</section>
+<section>
+<p>
+First, we will limit the result to zero rows, which can be done by not giving it any input or input we know does not exist. Then we can use the UNION clause to control what the first query returns, which is the data that will be used in the second query. Meaning that we can inject the following value into the search field:
+</p>
+<pre><code data-trim data-noescape>
+' union select 'STRING
+</code></pre>
+</section>
+<section>
+<p>
+    If we replace <code>'STRING</code> with a number that exists in the database, the application should return a valid object. However, the application adds a wildcard (%) to the string, meaning that we must first comment out the wildcard. The wildcard can be commented out by appending <code>'--</code> to the end of the string. For example, if we inject the line below into the search box, the application should display the book with ID 1 back to the user.
+</p>
+<pre><code data-trim data-noescape>
+' union select '1'--
+</code></pre>
+</section>
+<section>
+<p>If we did not limit the result to zero rows first, we would not have gotten the output of the <code>UNION</code> statement but rather the content from the <code>LIKE</code> clause. For example, by injecting:
+</p>
+<pre><code data-trim data-noescape>
+test' union select '1'--
+</code></pre>
+<p>
+The application would have executed the following queries:
+</p>
+<pre><code data-trim data-noescape>
+# Query 1
+SELECT id FROM books WHERE title LIKE 'test' UNION SELECT '1'--%
+# Query 2
+SELECT * FROM books WHERE id = '3'
+</code></pre>
+</section>
+<section>
+<p>
+Now that we have full control of the second query, we can use UNION-based SQL injection to extract data from the
+database. The goal is to make the second query look something similar to the following query:
+</p>
+<pre><code data-trim data-noescape>
+SELECT * FROM books WHERE id = '' union select 1,2,3,4--
+</code></pre>
+<p>
+Making the application execute the query above should be as easy as injecting the following query:
+</p>
+<pre><code data-trim data-noescape>
+' union select '1' union select 1,2,3,4--
+</code></pre>
+</section>
+<section>
+<p>
+However, we are closing the string that is supposed to be returned by appending the single quote (') before the second <code>UNION</code> clause. To make the query work and return our second <code>UNION</code> clause, we will have to escape the single quote. Escaping the single quote can be done by doubling up the quote (''). After having doubled the quotes, we have the following string:
+</p>
+<pre><code data-trim data-noescape>
+' union select '-1''union select 1,2,3,4--
+</code></pre>
+</section>
+<section>
+<p>
+If we combine this with what was learned about UNION-based SQL injection, the flag can be retrieved. For example, all usernames and passwords, including the flag, can be dumped by injecting the following command:
+</p>
+<pre><code data-trim data-noescape>
+' union select'-1'' union select 1,2,group_concat(password),group_concat(username) from users--
+</code></pre>
+</section>
+</div>
