@@ -44,7 +44,9 @@ def sessions():
         csession=session.get(f"{_bp}_user_id", None),
         csession_name=session.get(f"{_bp}_username", None),
         ctitle=get_config(f"{_bp}", "title"),
-        query=format_query(_query)
+        query=format_query(_query),
+        slides=f"{_bp}/slides/slides.html",
+        cdesc=get_config(f"{_bp}", "description")
     )
     _query = []
     return d
