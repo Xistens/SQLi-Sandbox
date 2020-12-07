@@ -6,7 +6,7 @@
         "SQL Injection"
     ],
     "difficulty": "medium",
-    "description": "The login function has been patched, but the note function has been enabled. Find a way to dump the database and retrieve the flag.",
+    "description": "The previous vulnerabilities have been fixed, and the login form is no longer vulnerable to SQL injection.The team has added a new note function, allowing users to add notes on their page. The goal of this challenge is to find the vulnerability and dump the database to find the flag",
     "flag": "THM{FLAGCHALLENGE4}",
     "database": {
         "drivername": "sqlite"
