@@ -22,10 +22,8 @@
         SELECT id, username FROM users WHERE 
             username = '' OR 1=1-- AND password = 'asd'
         </code></pre>
-        <p>Because of the comment symbol(--) , this is equivalent to the query below, which will return all users.</p>
-        <pre><code data-trim data-noescape data-line-numbers="2">
-        SELECT id, username FROM users WHERE username = '' OR 1=1
-        </code></pre>
+        <p>Because of the comment symbol(--), the password check is commented out and will not be performed. Also, since 1=1 is
+        always true, the query will return all users, making the application log in as the first user in the returned dataset.</p>
     </section>
     <section>
         <p>Another example of bypassing the login is to use <code>admin'--</code> as the username, which will comment out the
