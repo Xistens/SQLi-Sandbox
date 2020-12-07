@@ -1,13 +1,13 @@
 {
     "name": "challenge5",
-    "title": "Update Password",
+    "title": "Change Password",
     "category": "Web",
     "tags": [
         "SQL Injection"
     ],
     "difficulty": "medium",
     "description": "The developers have patched the login and note function. They also enabled the update password function and would like you to test it.",
-    "flag": "THM{CHALLENGE3FLAG}",
+    "flag": "THM{CHALLENGE5FLAG}",
     "database": {
         "drivername": "sqlite"
     },
