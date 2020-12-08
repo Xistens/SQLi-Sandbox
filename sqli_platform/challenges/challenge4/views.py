@@ -81,7 +81,7 @@ def login():
             return redirect(url_for(f"{_bp}.home"))
         else:
             flash("Invalid username or password.", "danger")
-    return render_template(f"{_bp}/login.html")
+    return render_template(f"{_templ}/login.html")
 
 
 @challenge4.route("/signup", methods=["GET", "POST"])
