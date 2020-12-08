@@ -63,10 +63,15 @@ def get_challenge_configs(path: str, config: str) -> list:
         # Path to config file
         tmp_path = f"{path}/{c}/{config}"
         if os.path.isfile(f'{tmp_path}'):
-            configs.append({
-                "path": f"{root}.{c}",
-                "config": load_json(tmp_path)
-            })
+            data = load_json(tmp_path)
+
+            # Check if challenge is enabled or not
+            enabled = data.get("enabled", True)
+            if enabled:
+                configs.append({
+                    "path": f"{root}.{c}",
+                    "config": data
+                })
     return configs
 
 

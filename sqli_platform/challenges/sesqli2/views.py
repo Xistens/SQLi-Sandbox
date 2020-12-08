@@ -11,23 +11,27 @@ from flask import (
     flash
 )
 from sqli_platform import (app, clog, db)
-from sqli_platform.utils.challenge import (get_flag, get_config, format_query, hash_pwd)
+from sqli_platform.utils.challenge import (
+    get_flag, get_config, format_query, hash_pwd)
 
 """
 
 """
 
-_bp = "sesqli1"
-sesqli1 = Blueprint(_bp , __name__, template_folder='templates', url_prefix=f"/{_bp}")
+_bp = "sesqli2"
+sesqli2 = Blueprint(
+    _bp, __name__, template_folder='templates', url_prefix=f"/{_bp}")
 _templ = "challenges/sesqli"
 _query = []
+
 
 def get_profile():
     query = f"SELECT uid, name, profileID, salary, passportNr, email, nickName, password FROM usertable WHERE UID = ?"
     params = [session.get(f"{_bp}_user_id", None)]
     return db.sql_query(_bp, query, params, one=True)
 
-@sesqli1.context_processor
+
+@sesqli2.context_processor
 def sessions():
     """
     
@@ -53,8 +57,9 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
-@sesqli1.route("/")
-@sesqli1.route("/login", methods=["GET"])
+
+@sesqli2.route("/")
+@sesqli2.route("/login", methods=["GET"])
 def login():
     global _query
 
@@ -63,10 +68,10 @@ def login():
     if username and password:
         password = hash_pwd(password)
 
-        query = f"SELECT uid, name, profileID, salary, passportNr, email, nickName, password FROM usertable WHERE profileID={username} AND password = '{password}'"
+        query = f"SELECT uid, name, profileID, salary, passportNr, email, nickName, password FROM usertable WHERE profileID = '{username}' AND password = '{password}'"
         _query.append(query)
         user = db.sql_query(_bp, query, one=True)
-        
+
         if user:
             session[f"{_bp}_user_id"] = user["uid"]
             session[f"{_bp}_data"] = dict(user)
@@ -79,7 +84,7 @@ def login():
         return render_template(f"{_bp}/login.html", slide_num=0)
 
 
-@sesqli1.route("/profile", methods=["GET", "POST"])
+@sesqli2.route("/profile", methods=["GET", "POST"])
 @login_required
 def profile():
     global _query
@@ -95,21 +100,20 @@ def profile():
             query = f"UPDATE usertable SET nickName='{nick}',email='{email}',password='{pwd_hash}' WHERE UID='{session[f'{_bp}_user_id']}'"
         else:
             query = f"UPDATE usertable SET nickName='{nick}',email='{email}' WHERE UID='{session[f'{_bp}_user_id']}'"
-        
+
         _query.append(query)
         db.sql_insert(_bp, query)
         return redirect(url_for(f"{_bp}.home"))
     return render_template(f"{_templ}/profile.html", csess_obj=get_profile())
 
 
-@sesqli1.route("/home")
+@sesqli2.route("/home")
 @login_required
 def home():
     return render_template(f"{_templ}/index.html", csess_obj=get_profile())
 
 
-@sesqli1.route("/logout")
+@sesqli2.route("/logout")
 def logout():
     session.clear()
     return redirect(url_for(f"{_bp}.login"))
-

@@ -1,15 +1,15 @@
 {
-    "name": "sesqli1",
-    "title": "SQL Injection 1: Input Box Non-String",
+    "name": "sesqli3",
+    "title": "SQL Injection 3: URL Injection",
     "category": "Web",
     "tags": ["SQL Injection"],
     "difficulty": "easy",
-    "flag": "THM{SESQLI1}",
+    "flag": "THM{SESQLI3}",
     "database": {
         "drivername": "sqlite"
     },
     "track": {
         "track_id": 2,
-        "position_in_track": 1
+        "position_in_track": 3
     }
 }

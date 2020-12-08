@@ -5,7 +5,7 @@ from sqli_platform import app, _configs
 
 def hash_pwd(string: str):
     """
-    Function to hash password with sha256
+    Function to hash password with
     """
     return hashlib.sha256(string.encode("utf-8")).hexdigest()
 

@@ -17,8 +17,8 @@ from sqli_platform.utils.challenge import (get_flag, get_config, format_query, h
 
 """
 
-_bp = "sesqli1"
-sesqli1 = Blueprint(_bp , __name__, template_folder='templates', url_prefix=f"/{_bp}")
+_bp = "sesqli3"
+sesqli3 = Blueprint(_bp , __name__, template_folder='templates', url_prefix=f"/{_bp}")
 _templ = "challenges/sesqli"
 _query = []
 
@@ -27,7 +27,7 @@ def get_profile():
     params = [session.get(f"{_bp}_user_id", None)]
     return db.sql_query(_bp, query, params, one=True)
 
-@sesqli1.context_processor
+@sesqli3.context_processor
 def sessions():
     """
     
@@ -53,8 +53,8 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
-@sesqli1.route("/")
-@sesqli1.route("/login", methods=["GET"])
+@sesqli3.route("/")
+@sesqli3.route("/login", methods=["GET", "POST"])
 def login():
     global _query
 
@@ -63,10 +63,10 @@ def login():
     if username and password:
         password = hash_pwd(password)
 
-        query = f"SELECT uid, name, profileID, salary, passportNr, email, nickName, password FROM usertable WHERE profileID={username} AND password = '{password}'"
+        query = f"SELECT uid, name, profileID, salary, passportNr, email, nickName, password FROM usertable WHERE profileID='{username}' AND password='{password}'"
         _query.append(query)
         user = db.sql_query(_bp, query, one=True)
-        
+
         if user:
             session[f"{_bp}_user_id"] = user["uid"]
             session[f"{_bp}_data"] = dict(user)
@@ -79,7 +79,7 @@ def login():
         return render_template(f"{_bp}/login.html", slide_num=0)
 
 
-@sesqli1.route("/profile", methods=["GET", "POST"])
+@sesqli3.route("/profile", methods=["GET", "POST"])
 @login_required
 def profile():
     global _query
@@ -102,13 +102,13 @@ def profile():
     return render_template(f"{_templ}/profile.html", csess_obj=get_profile())
 
 
-@sesqli1.route("/home")
+@sesqli3.route("/home")
 @login_required
 def home():
     return render_template(f"{_templ}/index.html", csess_obj=get_profile())
 
 
-@sesqli1.route("/logout")
+@sesqli3.route("/logout")
 def logout():
     session.clear()
     return redirect(url_for(f"{_bp}.login"))

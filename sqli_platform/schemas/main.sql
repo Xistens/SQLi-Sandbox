@@ -31,5 +31,5 @@ create table Track_item (
 
 INSERT INTO Track (track_name) VALUES 
     ("Vulnerable Startup"),
-    ("SQL Injection Demonstration");
+    ("Introduction SQL Injection");
 

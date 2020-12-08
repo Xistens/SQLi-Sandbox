@@ -17,8 +17,8 @@ from sqli_platform.utils.challenge import (get_flag, get_config, format_query, h
 
 """
 
-_bp = "sesqli1"
-sesqli1 = Blueprint(_bp , __name__, template_folder='templates', url_prefix=f"/{_bp}")
+_bp = "sesqli4"
+sesqli4 = Blueprint(_bp , __name__, template_folder='templates', url_prefix=f"/{_bp}")
 _templ = "challenges/sesqli"
 _query = []
 
@@ -27,7 +27,7 @@ def get_profile():
     params = [session.get(f"{_bp}_user_id", None)]
     return db.sql_query(_bp, query, params, one=True)
 
-@sesqli1.context_processor
+@sesqli4.context_processor
 def sessions():
     """
     
@@ -53,17 +53,22 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
-@sesqli1.route("/")
-@sesqli1.route("/login", methods=["GET"])
+@sesqli4.route("/")
+@sesqli4.route("/login", methods=["GET", "POST"])
 def login():
     global _query
 
-    username = request.args.get("profileID")
-    password = request.args.get("password")
-    if username and password:
+    if request.method == "POST":
+        username = request.form["profileID"]
+        password = request.form["password"]
         password = hash_pwd(password)
+        # Hash password
 
-        query = f"SELECT uid, name, profileID, salary, passportNr, email, nickName, password FROM usertable WHERE profileID={username} AND password = '{password}'"
+        if not (username and password):
+            flash("Username or Password cannot be empty.", "warning")
+            return redirect(url_for(f"{_bp}.login"))
+        
+        query = f"SELECT uid, name, profileID, salary, passportNr, email, nickName, password FROM usertable WHERE profileID = '{username}' AND password = '{password}'"
         _query.append(query)
         user = db.sql_query(_bp, query, one=True)
         
@@ -74,12 +79,10 @@ def login():
             return redirect(url_for(f"{_bp}.home"))
         else:
             flash("The account information you provided does not exist!", "danger")
-            return render_template(f"{_bp}/login.html", slide_num=0)
-    else:
-        return render_template(f"{_bp}/login.html", slide_num=0)
+    return render_template(f"{_bp}/login.html", slide_num=0)
 
 
-@sesqli1.route("/profile", methods=["GET", "POST"])
+@sesqli4.route("/profile", methods=["GET", "POST"])
 @login_required
 def profile():
     global _query
@@ -102,13 +105,13 @@ def profile():
     return render_template(f"{_templ}/profile.html", csess_obj=get_profile())
 
 
-@sesqli1.route("/home")
+@sesqli4.route("/home")
 @login_required
 def home():
     return render_template(f"{_templ}/index.html", csess_obj=get_profile())
 
 
-@sesqli1.route("/logout")
+@sesqli4.route("/logout")
 def logout():
     session.clear()
     return redirect(url_for(f"{_bp}.login"))
