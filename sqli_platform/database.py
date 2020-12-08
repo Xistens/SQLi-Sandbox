@@ -60,10 +60,11 @@ class Database(object):
             # Add challenge information to db
             tags = ", ".join(c.get("tags", ""))
             difficulty = c["difficulty"].lower().capitalize()
+            description = c.get("description", "")
             rowid = self.sql_insert(
                 "main", 
                 "INSERT INTO Challenge (name, title, tags, difficulty, description) VALUES (?, ?, ?, ?, ?)", 
-                [c["name"], c["title"], tags, difficulty, c["description"]]
+                [c["name"], c["title"], tags, difficulty, description]
             )
 
             # Add track information to db
@@ -156,7 +157,10 @@ class Database(object):
 
 
     def sql_insert(self, name: str, query: str, args: tuple = ()):
-        app_log.debug(query)
-        cur = self.get_db(name).execute(query, args)
-        cur.execute("COMMIT")
-        return cur.lastrowid
+        try:
+            app_log.debug(query)
+            cur = self.get_db(name).execute(query, args)
+            cur.execute("COMMIT")
+            return cur.lastrowid
+        except sqlite3.IntegrityError:
+            app_log.error(name, query, args)
