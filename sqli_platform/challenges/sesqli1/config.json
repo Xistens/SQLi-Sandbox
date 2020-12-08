@@ -1,0 +1,16 @@
+{
+    "name": "sesqli1",
+    "title": "SQL Injection Example 4: POST Injection",
+    "category": "Web",
+    "tags": ["SQL Injection"],
+    "difficulty": "easy",
+    "description": "SQL Injection Example: POST Injection",
+    "flag": "THM{SESQLI1}",
+    "database": {
+        "drivername": "sqlite"
+    },
+    "track": {
+        "track_id": 2,
+        "position_in_track": 1
+    }
+}

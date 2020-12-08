@@ -1,6 +1,13 @@
 #!/usr/bin/python3
 import fileinput
+import hashlib
 from sqli_platform import app, _configs
+
+def hash_pwd(string: str):
+    """
+    Function to hash password with sha256
+    """
+    return hashlib.sha256(string.encode("utf-8")).hexdigest()
 
 def get_config(challenge: str, key: str):
     """

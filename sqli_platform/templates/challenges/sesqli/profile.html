@@ -1,0 +1,32 @@
+{% extends "challenges/sesqli/layout.html" %}
+{% block title %}Edit Profile{% endblock %}
+{% block body %}
+<div class="login-form">
+    <form action="{{ url_for('.profile') }}" method="post">
+        <h2 class="text-center">Edit {{csess_obj['name']}}'s Profile Information</h2>
+        <div class="form-group">
+            <label for="nickName">Nick Name:</label>
+            <input type="text" class="form-control" placeholder="Nick Name" id="nickName" name="nickName" value="{{csess_obj['nickName']}}">
+        </div>
+        <div class="form-group">
+            <label for="email">E-mail:</label>
+            <input type="text" class="form-control" placeholder="E-mail" id="email" name="email" value="{{csess_obj['email']}}">
+        </div>
+        <div class="form-group">
+            <label for="password">Password:</label>
+            <input type="password" class="form-control" placeholder="Password" id="password" name="password">
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary btn-block">Change</button>
+        </div>
+        <div class="clearfix">
+            <label class="pull-left checkbox-inline"></label>
+        </div>
+    </form>
+</div>
+</div>
+{% include 'footer.html' %}
+</body>
+
+</html>
+{% endblock %}
