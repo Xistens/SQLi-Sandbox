@@ -1,6 +1,6 @@
 {
     "name": "sesqli5",
-    "enabled": true,
+    "enabled": false,
     "title": "SQL Injection 5: Prepared Statements",
     "category": "Web",
     "tags": ["SQL Injection"],

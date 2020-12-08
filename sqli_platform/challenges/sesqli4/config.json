@@ -1,6 +1,7 @@
 {
     "name": "sesqli4",
     "title": "SQL Injection 4: POST Injection",
+    "enabled": false,
     "category": "Web",
     "tags": ["SQL Injection"],
     "difficulty": "easy",
