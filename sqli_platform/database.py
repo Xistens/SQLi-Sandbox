@@ -124,7 +124,8 @@ class Database(object):
             FROM 
                 Track_Item TI
                 JOIN challenge c ON c.challenge_id=TI.challenge_id
-                LEFT JOIN track t ON t.track_id=TI.track_id
+                JOIN track t ON t.track_id=TI.track_id
+            ORDER BY t.track_id DESC
             """
         )
 

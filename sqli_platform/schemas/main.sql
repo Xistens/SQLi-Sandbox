@@ -29,5 +29,7 @@ create table Track_item (
     track_position integer not null
 );
 
-INSERT INTO Track (track_name) VALUES ("Vulnerable Startup");
+INSERT INTO Track (track_name) VALUES 
+    ("Vulnerable Startup"),
+    ("SQL Injection Demonstration");
 
