@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-from functools import wraps
 from flask import (
     render_template,
     Blueprint,
@@ -11,7 +10,7 @@ from flask import (
     flash
 )
 from sqli_platform import (app, clog, db)
-from sqli_platform.utils.challenge import (get_flag, get_config, format_query, hash_pwd)
+from sqli_platform.utils.challenge import (get_flag, get_config, format_query, hash_pwd, login_required)
 
 """
 
@@ -28,30 +27,14 @@ def get_profile():
     return db.sql_query(_bp, query, params, one=True)
 
 @sesqli4.context_processor
-def sessions():
-    """
-    
-    """
+def context():
     global _query
     d = dict(
-        cname=_bp,
-        csession=session.get(f"{_bp}_user_id", None),
-        ctitle=get_config(f"{_bp}", "title"),
-        query=format_query(_query),
-        slides=f"{_bp}/slides/slides.html",
-        cdesc=get_config(f"{_bp}", "description")
+        query=format_query(_query)
     )
     _query = []
     return d
 
-
-def login_required(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if session.get(f"{_bp}_user_id", None) is None:
-            return redirect(url_for(f"{_bp}.login", next=request.url))
-        return f(*args, **kwargs)
-    return decorated_function
 
 @sesqli4.route("/")
 @sesqli4.route("/login", methods=["GET", "POST"])
@@ -83,7 +66,7 @@ def login():
 
 
 @sesqli4.route("/profile", methods=["GET", "POST"])
-@login_required
+@login_required(_bp)
 def profile():
     global _query
 
@@ -106,7 +89,7 @@ def profile():
 
 
 @sesqli4.route("/home")
-@login_required
+@login_required(_bp)
 def home():
     return render_template(f"{_templ}/index.html", csess_obj=get_profile())
 

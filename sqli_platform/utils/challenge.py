@@ -1,6 +1,13 @@
 #!/usr/bin/python3
 import fileinput
 import hashlib
+from flask import (
+    url_for,
+    redirect,
+    session,
+    request
+)
+from functools import wraps
 from sqli_platform import app, _configs
 
 def hash_pwd(string: str):
@@ -9,7 +16,7 @@ def hash_pwd(string: str):
     """
     return hashlib.sha256(string.encode("utf-8")).hexdigest()
 
-def get_config(challenge: str, key: str):
+def get_config(challenge: str, key: str = None):
     """
     Retrieves the flag from the _configs object
 
@@ -17,12 +24,16 @@ def get_config(challenge: str, key: str):
         challenge:  (str) The name of the challenge to retrieve the flag from
         key:       (str) The name of the configuration to retrieve
     Return:
-        Returns the value of the configuration if it is found, else it will return none.
+        Returns the value of the configuration if it is found or, if there is no key, 
+        it will return the entire config for the challenge. Otherwise, it will return none.
     """
     for conf in _configs:
         name = conf["config"]["name"]
         if name == challenge:
-            return conf["config"].get(key, None)
+            if key:
+                return conf["config"].get(key, None)
+            else:
+                return conf["config"]
     return None
 
 def get_flag(challenge: str):
@@ -77,3 +88,22 @@ def format_query(queries: list = []) -> str:
             #string += f"Query: {item}\n"
             data.append((item,))
     return data
+
+
+def login_required(bp:str):
+    """
+    Wrapper for login required. Will redirect traffic to the login page if the
+    user is not logged on. The user is considered logged on if a session for the
+    blueprint exists with a user id ({BP}_user_id).
+
+    Args:
+        bp: (str) Name of the blueprint
+    """
+    def _login_required(f):
+        @wraps(f)
+        def decorated_function(*args, **kwargs):
+            if session.get(f"{bp}_user_id", None) is None:
+                return redirect(url_for(f"{bp}.login", next=request.url))
+            return f(*args, **kwargs)
+        return decorated_function
+    return _login_required

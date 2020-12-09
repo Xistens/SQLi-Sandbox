@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-from functools import wraps
 from flask import (
     render_template,
     Blueprint,
@@ -11,11 +10,7 @@ from flask import (
     flash
 )
 from sqli_platform import app, clog, db
-from sqli_platform.utils.challenge import (
-    get_flag,
-    get_config,
-    format_query
-)
+from sqli_platform.utils.challenge import (get_flag,get_config,format_query,login_required)
 
 """
 Flag1 - Login as admin
@@ -40,31 +35,14 @@ _templ = "challenges/challenge1"
 _query = []
 
 @challenge3.context_processor
-def sessions():
-    """
-    
-    """
+def context():
     global _query
     d = dict(
-        cname=_bp,
-        csession = session.get(f"{_bp}_user_id", None),
-        csession_name=session.get(f"{_bp}_username", None),
-        ctitle=get_config(f"{_bp}", "title"),
-        query=format_query(_query),
-        slides=f"{_bp}/slides/slides.html",
-        cdesc=get_config(f"{_bp}", "description")
+        query=format_query(_query)
     )
     _query = []
     return d
 
-
-def login_required(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if session.get(f"{_bp}_user_id", None) is None:
-            return redirect(url_for(f"{_bp}.login", next=request.url))
-        return f(*args, **kwargs)
-    return decorated_function
 
 @challenge3.route("/")
 @challenge3.route("/login", methods=["GET", "POST"])
@@ -124,20 +102,20 @@ def signup():
 
 
 @challenge3.route("/home")
-@login_required
+@login_required(_bp)
 def home():
     return render_template(f"{_bp}/index.html")
 
 
 @challenge3.route("/notes", methods=["GET", "POST"])
-@login_required
+@login_required(_bp)
 def notes():
     flash("Not Implemented ", "warning")
     return render_template(f"{_templ}/notes.html")
 
 
 @challenge3.route("/changepwd", methods=["GET", "POST"])
-@login_required
+@login_required(_bp)
 def changepwd():
     flash("Not Implemented ", "warning")
     return render_template(f"{_templ}/updatepwd.html")

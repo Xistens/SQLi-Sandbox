@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-from functools import wraps
 from flask import (
     render_template,
     Blueprint,
@@ -12,7 +11,7 @@ from flask import (
     jsonify
 )
 from sqli_platform import app, app_log, db
-from sqli_platform.utils.challenge import get_config, format_query
+from sqli_platform.utils.challenge import get_config, format_query, login_required
 
 """
 The login function has been patched.
@@ -31,31 +30,13 @@ _templ = "challenges/challenge1"
 _query = []
 
 @challenge6.context_processor
-def sessions():
-    """
-    
-    """
+def context():
     global _query
     d = dict(
-        cname=_bp,
-        csession=session.get(f"{_bp}_user_id", None),
-        csession_name=session.get(f"{_bp}_username", None),
-        ctitle=get_config(f"{_bp}", "title"),
-        query=format_query(_query),
-        slides=f"{_bp}/slides/slides.html",
-        cdesc=get_config(f"{_bp}", "description")
+        query=format_query(_query)
     )
     _query = []
     return d
-
-
-def login_required(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if session.get(f"{_bp}_user_id", None) is None:
-            return redirect(url_for(f"{_bp}.login", next=request.url))
-        return f(*args, **kwargs)
-    return decorated_function
 
 
 @challenge6.route("/")
@@ -107,13 +88,13 @@ def signup():
 
 
 @challenge6.route("/home")
-@login_required
+@login_required(_bp)
 def home():
     return render_template(f"{_bp}/index.html")
 
 
 @challenge6.route("/notes", methods=["GET", "POST"])
-@login_required
+@login_required(_bp)
 def notes():
     global _query
 
@@ -140,7 +121,7 @@ def notes():
 
 
 @challenge6.route("/changepwd", methods=["GET", "POST"])
-@login_required
+@login_required(_bp)
 def changepwd():
     global _query
 
@@ -179,7 +160,7 @@ def logout():
 
 
 @challenge6.route("/book", methods=["GET"])
-@login_required
+@login_required(_bp)
 def book():
     global _query
 

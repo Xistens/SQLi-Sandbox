@@ -4,6 +4,20 @@ from flask import (
 )
 from jinja2 import TemplateNotFound
 from sqli_platform import *
+from sqli_platform.utils.challenge import get_config
+
+@app.context_processor
+def context():
+    bp = request.blueprint
+    return dict(
+        cname=bp,
+        csession=session.get(f"{bp}_user_id", None),
+        csession_name=session.get(f"{bp}_username", None),
+        ctitle=get_config(bp, "title"),
+        slides=f"{bp}/slides/slides.html",
+        cdesc=get_config(bp, "description"),
+        cconf=get_config(bp)
+    )
 
 @app.route('/')
 def index():
