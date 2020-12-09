@@ -23,13 +23,13 @@
                             </div>
                             <div class="card-body">
                                 <p>{{ i.description }}</p>
-                                <a href="{{url_for(i.name + '.home')}}">Start</a>
+                                <a href="{{url_for(i.name + '.home')}}">Go to Challenge</a>
                             </div>
                         </div><!-- /.card .shadow-->
                         {% else %}
                         <div class="card b-offset border-left-{{ i.difficulty.lower() }}">
                             <div class="card-header py-3">
-                                <div class="pull-right body-med"><a href="{{url_for(i.name + '.home')}}">Start</a> | <span class="diff-{{i.difficulty.lower()}}">{{ i.difficulty }}</span></div>
+                                <div class="pull-right body-med"><a href="{{url_for(i.name + '.home')}}">Go to Challenge</a> | <span class="diff-{{i.difficulty.lower()}}">{{ i.difficulty }}</span></div>
                                 <h6 class="m-0 font-weight-bold"><a class="deco-none" href="{{url_for(i.name + '.home')}}">{{ i.title }}</a></h6>
                             </div>
                         </div><!-- /.card .shadow-->
