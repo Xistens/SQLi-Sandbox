@@ -15,16 +15,20 @@
         <a class="navbar-brand">SQL Injection Sandbox</a>
         <div class="navbar-text">
             <div class="form-check form-check-inline">
-                <input class="form-check-input settings-event" type="checkbox" value="query">
+                {% if session.get('mainapp_query', False) %}
+                    <input class="form-check-input settings-event" type="checkbox" checked value="query">
+                {% else %}
+                    <input class="form-check-input settings-event" type="checkbox" value="query">
+                {% endif %}
                 <label class="form-check-label" for="inlineCheckbox1">Show Query</label>
             </div>
             <div class="form-check form-check-inline">
-                <input class="form-check-input settings-event" type="checkbox" value="guidance">
+                {% if session.get('mainapp_guidance', False) %}
+                    <input class="form-check-input settings-event" type="checkbox" checked value="guidance">
+                {% else %}
+                    <input class="form-check-input settings-event" type="checkbox" value="guidance">
+                {% endif %}
                 <label class="form-check-label" for="inlineCheckbox2">Guidance</label>
-            </div>
-            <div class="form-check form-check-inline">
-                <input class="form-check-input settings-event" type="checkbox" value="option3" disabled>
-                <label class="form-check-label" for="inlineCheckbox3">Something</label>
             </div>
         </div>
     </nav>

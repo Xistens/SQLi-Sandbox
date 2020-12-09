@@ -1,6 +1,6 @@
 import json
 from flask import (
-    render_template, Blueprint, abort, request
+    render_template, Blueprint, abort, request, session
 )
 from jinja2 import TemplateNotFound
 from sqli_platform import *
@@ -51,5 +51,5 @@ def settings():
         value = data.get("value", False)
         if conf in whitelist:
             status = True if value else False
-            print(f"{conf}: {value}")
+            session[f"mainapp_{conf}"] = status
         return {"Status": "Success"}
