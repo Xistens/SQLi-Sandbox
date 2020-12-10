@@ -4,6 +4,7 @@ PRAGMA foreign_keys = OFF;
 
 drop table if exists Track;
 drop table if exists Challenge;
+drop table if exists Track_item;
 
 PRAGMA foreign_keys = ON;
 
