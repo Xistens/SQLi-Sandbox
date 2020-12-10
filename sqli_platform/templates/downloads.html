@@ -1,0 +1,39 @@
+    {% extends "layout.html" %}
+    {% block title %}Home{% endblock %}
+    {% block body %}
+        <!-- Begin Page Content -->
+        <div class="container main pb">
+        
+            <!-- Page Heading -->
+            <!-- <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                <h1 class="h3 mb-0 text-gray-800">Cards</h1>
+            </div> -->
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        {% if dir %}
+                            <div class="m-0 font-weight-bold text-primary">
+                                <a href="{{url_for('downloads')}}">Downloads</a>/{{dir}}</div>
+                        {% else %}
+                            <div class="m-0 font-weight-bold text-primary"><a href="{{url_for('downloads')}}">Downloads</a></div>
+                        {% endif %}
+                    </div>
+                    <div class="card-body">
+                        {% for f in files %}
+                        <li class="list-group-item">
+                            {% if f[1] == 'dir' %}
+                                <span><a href="{{url_for(request.endpoint, dir=f[0])}}">{{f[0]}}</a></span>
+                            {% else %}
+                                <span>{{f[0]}} </span>
+                                (<a href="{{url_for('view', dir=dir, filename=f[0])}}">View</a> | <a href="{{url_for('download', dir=dir, filename=f[0])}}">Download</a>)
+                                <div class="float-right">{{'%0.3f' | format(f[1]|float)}} kb</div>
+                            {% endif %}
+                        </li>
+                        {% endfor%}
+                    </div>
+                </div>
+        </div><!-- /.container-fluid -->
+        </div><!-- End of Main Content --> 
+        {% include 'settings.html' %}
+    </body>
+</html>
+{% endblock %}

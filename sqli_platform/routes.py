@@ -1,8 +1,16 @@
 import json
 from flask import (
-    render_template, Blueprint, abort, request, session
+    render_template,
+    redirect,
+    url_for,
+    Blueprint, 
+    abort, 
+    request, 
+    session,
+    send_from_directory
 )
 from jinja2 import TemplateNotFound
+from werkzeug.utils import secure_filename
 from sqli_platform import *
 from sqli_platform.utils.challenge import get_config
 
@@ -67,3 +75,62 @@ def settings():
             status = True if value else False
             session[f"mainapp_{conf}"] = status
         return {"Status": "Success"}
+
+
+@app.route("/download/<path:filename>", defaults={"dir": ""})
+@app.route("/download/<dir>/<path:filename>")
+def download(dir, filename):
+    if dir and dir == DOWNLOAD_WHITELIST:
+        return send_from_directory(directory=f"{DOWNLOAD_PATH}/{dir}", filename=filename)
+    else:
+        return send_from_directory(directory=f"{DOWNLOAD_PATH}", filename=filename)
+
+
+def get_files(dir_path):
+    """ Loads a list that contains tuples with filename and file size
+    from every file in  the directory.
+    """
+    files = os.listdir(dir_path)
+    files_list = []
+
+    for file in files:
+        if os.path.isdir(os.path.join(dir_path, file)):
+            files_list.append((file, "dir"))
+        else:
+            size = os.path.getsize(os.path.join(dir_path, file)) / 1024.0
+            files_list.extend([(file, size)])
+    return files_list
+
+
+@app.route("/view/<path:filename>", defaults={"dir": ""})
+@app.route("/view/<dir>/<path:filename>")
+def view(dir, filename):
+    filename = secure_filename(filename)
+    if dir:
+        if dir in DOWNLOAD_WHITELIST:
+            dir_path = f"{DOWNLOAD_PATH}{dir}/{filename}"
+        else:
+            content = "File does not exists."
+    else:
+        dir_path = f"{DOWNLOAD_PATH}{filename}"
+
+    try:
+        text = open(dir_path, "r")
+        content = text.read()
+        text.close()
+    except IOError:
+        content = "File does not exist."
+    return render_template("view.html", dir=dir, text=content, name=filename)
+
+@app.route("/downloads/", defaults={"dir": None})
+@app.route("/downloads/<path:dir>")
+def downloads(dir):
+    dir_path = DOWNLOAD_PATH
+    if dir:
+        if dir in DOWNLOAD_WHITELIST:
+            dir_path = f"{DOWNLOAD_PATH}{dir}"
+        else:
+            return redirect(url_for("downloads"))
+    else:
+        dir = ""
+    return render_template("downloads.html", dir=dir, files=get_files(dir_path))

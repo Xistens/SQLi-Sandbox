@@ -1,0 +1,42 @@
+<script>
+    function changeSettings(data) {
+        console.log("Changing settings...");
+        fetch("{{ url_for('settings') }}", {
+            method: "post",
+            body: JSON.stringify(data)
+        }).then(function (response) {
+            return response.json();
+        }).then(function (data) {
+            console.log("Update status: ", data)
+        });
+    }
+
+    function handleEvent(evnt) {
+        if (evnt.type === "change") {
+            var data = {};
+            data.id = this.value;
+            data.value = this.checked;
+            changeSettings(data);
+        }
+    }
+
+    function init() {
+        var elements = document.querySelectorAll("input.settings-event");
+        for (var i = 0, n = elements.length; i < n; i++) {
+            elements[i].addEventListener("change", handleEvent);
+        }
+    }
+    init();
+    function deleteAllCookies() {
+        // https://stackoverflow.com/questions/179355/clearing-all-cookies-with-javascript
+        var cookies = document.cookie.split(";");
+
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i];
+            var eqPos = cookie.indexOf("=");
+            var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+            document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+        }
+    }
+    deleteAllCookies();
+</script>

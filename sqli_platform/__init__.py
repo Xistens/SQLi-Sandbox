@@ -8,7 +8,8 @@ from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 
 _basedir = os.path.abspath(os.path.dirname(__file__))
-
+DOWNLOAD_PATH = f"{_basedir}/../scripts/"
+DOWNLOAD_WHITELIST = ["challenge3", "challenge4"]
 # Path to challenges
 _challenges_path = f'{_basedir}/challenges'
 
