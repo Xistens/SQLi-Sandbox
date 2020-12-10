@@ -19,6 +19,7 @@ install_program python3-pip
 install_program sqlite3
 # pip3 install -r requirements.txt
 
+USERNAME=$(logname)
 CUR_PATH=$(pwd -P)
 NAME="sqlilab"
 /bin/cat > "$NAME".service <<EOF
@@ -27,7 +28,7 @@ Description=$NAME service
 After=network.target
 
 [Service]
-User=victim
+User=$USERNAME
 ExecStart=python3 $CUR_PATH/server.py
 
 [Install]
