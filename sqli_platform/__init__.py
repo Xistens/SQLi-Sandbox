@@ -17,7 +17,7 @@ _challenges_path = f'{_basedir}/challenges'
 _challenge_config = 'config.json'
 
 app = Flask(__name__)
-app.debug = True
+app.debug = False
 # Change me
 app.secret_key = b"dummy_key"
 limiter = Limiter(app, default_limits=[], key_func=get_remote_address)
