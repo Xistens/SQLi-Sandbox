@@ -1,10 +1,8 @@
 {
     "name": "sesqli1",
     "title": "SQL Injection 1: Input Box Non-String",
-    "category": "Web",
     "tags": ["SQL Injection"],
     "difficulty": "easy",
-    "flag": "THM{SESQLI1}",
     "database": {
         "drivername": "sqlite"
     },

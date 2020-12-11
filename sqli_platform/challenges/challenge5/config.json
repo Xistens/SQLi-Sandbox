@@ -1,13 +1,11 @@
 {
     "name": "challenge5",
     "title": "Change Password",
-    "category": "Web",
     "tags": [
         "SQL Injection"
     ],
     "difficulty": "medium",
     "description": "The developers have patched the login and note function. They also enabled the update password function and would like you to test it. The goal here is to exploit the vulnerable function to gain access to the admin’s account.",
-    "flag": "THM{CHALLENGE5FLAG}",
     "database": {
         "drivername": "sqlite"
     },

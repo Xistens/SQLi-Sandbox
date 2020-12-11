@@ -1,11 +1,9 @@
 {
     "name": "challenge3",
     "title": "Broken Authentication 3: Blind Injection",
-    "category": "Web",
     "tags": ["SQL Injection"],
     "difficulty": "medium",
     "description": "It is no longer possible to extract data from the Flask session cookie or via the username display. However, the login form is still vulnerable. Abuse the login form with blind SQL injection to extract the admin's password, preferably with a custom script.",
-    "flag": "THM{Blind}",
     "database": {
         "drivername": "sqlite"
     },

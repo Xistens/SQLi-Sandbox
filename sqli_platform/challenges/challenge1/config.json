@@ -1,11 +1,9 @@
 {
     "name": "challenge1",
     "title": "Broken Authentication",
-    "category": "Web",
     "tags": ["SQL Injection"],
     "difficulty": "easy",
     "description": "Find a way to bypass the authentication to retrieve the flag.",
-    "flag": "THM{AuTh}",
     "database": {
         "drivername": "sqlite"
     },

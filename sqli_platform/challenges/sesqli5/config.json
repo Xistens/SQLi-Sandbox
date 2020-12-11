@@ -2,10 +2,8 @@
     "name": "sesqli5",
     "enabled": false,
     "title": "SQL Injection 5: Prepared Statements",
-    "category": "Web",
     "tags": ["SQL Injection"],
     "difficulty": "easy",
-    "flag": "THM{SESQLI5}",
     "database": {
         "drivername": "sqlite"
     },

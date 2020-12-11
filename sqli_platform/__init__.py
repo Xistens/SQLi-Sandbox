@@ -18,13 +18,19 @@ _challenge_config = 'config.json'
 
 app = Flask(__name__)
 app.debug = False
+
 # Change me
 app.secret_key = b"dummy_key"
+app.config["flag_key"] = "xV6WxVghQ7fFxarqnyj5EYwPmrGZgt4Q"
+
+
+# "{FLAG}" will be replaced with the MD5 sum of challenge title and flag_key
+app.config["flag_format"] = "THM{{FLAG}}"
+
 limiter = Limiter(app, default_limits=[], key_func=get_remote_address)
 
 # Temp logging directory, remember to change?
 app.config['LOG_FOLDER'] = f'{_basedir}/logs'
-#app.config['LOG_FILE'] = f'{_basedir}/logs/application.log'
 
 # Configure logging
 logger.init_logs(app)
@@ -35,7 +41,7 @@ app_log.debug("Initializing loggers")
 # Load configs from all challenges into memory
 _configs = utils.get_challenge_configs(_challenges_path, _challenge_config)
 
-# Create MySQL databases for all the challenges and set full permission
+
 from sqli_platform import database
 
 db = database.Database(app, _configs, _basedir)

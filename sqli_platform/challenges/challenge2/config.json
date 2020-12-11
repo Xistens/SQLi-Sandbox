@@ -1,11 +1,9 @@
 {
     "name": "challenge2",
     "title": "Broken Authentication 2",
-    "category": "Web",
     "tags": ["SQL Injection"],
     "difficulty": "easy",
     "description": "Find a way to abuse the login form to dump all the passwords in the database to retrieve the flag without using blind injection.",
-    "flag": "THM{AuTh2}",
     "limiter": "50/minute;1/second",
     "database": {
         "drivername": "sqlite"

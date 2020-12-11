@@ -45,7 +45,11 @@ def get_flag(challenge: str):
     Return:
         Returns the flag (str) if it is found, else it will return None
     """
-    return get_config(challenge, "flag")
+    title = get_config(challenge, "title").encode("utf-8")
+    key = app.config["flag_key"].encode("utf-8")
+    flag_hash = hashlib.md5(key + title).hexdigest()
+    flag = app.config["flag_format"].replace("{FLAG}", flag_hash)
+    return flag
 
 
 def place_flag_schema(schema: str, challenge: str):

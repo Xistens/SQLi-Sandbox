@@ -1,13 +1,11 @@
 {
     "name": "challenge6",
     "title": "Book Title",
-    "category": "Web",
     "tags": [
         "SQL Injection"
     ],
     "difficulty": "easy",
     "description": "A new function has been added to the page, and it is now possible to search books in the database. The new search function is vulnerable to SQL injection because it concatenates the user input directly into the SQL statement. The goal of the task is to abuse this vulnerability to find the hidden flag.",
-    "flag": "THM{5ydwrc97LfZZqsxBVNBJHTAYNvExnYPQ}",
     "limiter": "50/minute;1/second",
     "database": {
         "drivername": "sqlite"

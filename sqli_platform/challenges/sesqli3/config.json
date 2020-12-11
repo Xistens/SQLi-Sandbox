@@ -1,10 +1,8 @@
 {
     "name": "sesqli3",
     "title": "SQL Injection 3: URL Injection",
-    "category": "Web",
     "tags": ["SQL Injection"],
     "difficulty": "easy",
-    "flag": "THM{SESQLI3}",
     "database": {
         "drivername": "sqlite"
     },
