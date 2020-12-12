@@ -17,7 +17,7 @@ fi
 
 install_program python3-pip
 install_program sqlite3
-# pip3 install -r requirements.txt
+pip3 install -r requirements.txt
 
 USERNAME=$(logname)
 CUR_PATH=$(pwd -P)
