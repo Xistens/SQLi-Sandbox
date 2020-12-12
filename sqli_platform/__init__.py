@@ -46,10 +46,6 @@ from sqli_platform import database
 
 db = database.Database(app, _configs, _basedir)
 
-# Register the API
-from sqli_platform.api import api
-app.register_blueprint(api)
-
 # Import challenges modules and register their blueprints
 utils.load_blueprints(app, limiter, _configs)
 
