@@ -1,6 +1,6 @@
 #!/bin/bash
 
-/bin/sudo apt update
+sudo apt update
 
 install_program(){
 #for easy install programs:
@@ -9,7 +9,7 @@ dpkg -s $1 &>/dev/null
 	if [ $? != 0 ] #if program is not installed
 		then 
 			echo install $1
-			/bin/sudo apt install $1 -y
+			sudo apt install $1 -y
 			echo $1 installed
 	else echo $1 is already installed
 fi
@@ -22,7 +22,7 @@ install_program sqlite3
 USERNAME=$(logname)
 CUR_PATH=$(pwd -P)
 NAME="sqlilab"
-/bin/cat > "$NAME".service <<EOF
+cat > "$NAME".service <<EOF
 [Unit]
 Description=$NAME service
 After=network.target
@@ -36,10 +36,10 @@ WantedBy=multi-user.target
 EOF
 
 
-/bin/sudo /bin/ln -sf "$CUR_PATH"/"$NAME".service /etc/systemd/system/"$NAME".service
+sudo /bin/ln -sf "$CUR_PATH"/"$NAME".service /etc/systemd/system/"$NAME".service
 
-/bin/sudo /usr/bin/systemctl daemon-reload
-/bin/sudo /usr/bin/systemctl start "$NAME".service
-/bin/sudo /usr/bin/systemctl enable "$NAME".service
+sudo systemctl daemon-reload
+sudo systemctl start "$NAME".service
+sudo systemctl enable "$NAME".service
 
 
