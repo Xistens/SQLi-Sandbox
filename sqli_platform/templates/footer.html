@@ -1,28 +1,32 @@
 {% if not isIndex %}
 <footer class="footer bg-light overflow-auto">
     <div class="container main">
-        {% if cconf and cconf.get('allow_debug_query', True) %}
-            {% if session.get('mainapp_query', False) %}
-                {% if query %}
-                <div class="card">
-                    <div class="card-header text-center">Executed Query:</div>
-                    <div class="card-body">
-                        <pre>{% for i in range(query|length) %}Query {{i+1}}:<code class="sql">{{ query[i][0] }}</code>{% if query[i][1] %} Parameters:<code>{{query[i][1]}}</code>{% endif %}{% endfor %}</pre>
+        {% if config.get('enable_debug_query', True) %}
+            {% if cconf and cconf.get('allow_debug_query', True) %}
+                {% if session.get('mainapp_query', config['debug_query_default']) %}
+                    {% if query %}
+                    <div class="card">
+                        <div class="card-header text-center">Executed Query:</div>
+                        <div class="card-body">
+                            <pre>{% for i in range(query|length) %}Query {{i+1}}:<code class="sql">{{ query[i][0] }}</code>{% if query[i][1] %} Parameters:<code>{{query[i][1]}}</code>{% endif %}{% endfor %}</pre>
+                        </div>
                     </div>
-                </div>
+                    {% endif %}
                 {% endif %}
             {% endif %}
         {% endif %}
-        {% if cconf and cconf.get('allow_guidance', True)%}
-            {% if session.get('mainapp_guidance', False) %}
-                {% if slides %}
-                <div class="card b-offset" style="width:100%;height:300px;">
-                    <div class="reveal">
-                        {% if slides %}
-                            {% include slides ignore missing %}
-                        {% endif %}
+        {% if config.get('enable_guidance', True) %}
+            {% if cconf and cconf.get('allow_guidance', True)%}
+                {% if session.get('mainapp_guidance', config['guidance_default']) %}
+                    {% if slides %}
+                    <div class="card b-offset" style="width:100%;height:300px;">
+                        <div class="reveal">
+                            {% if slides %}
+                                {% include slides ignore missing %}
+                            {% endif %}
+                        </div>
                     </div>
-                </div>
+                    {% endif %}
                 {% endif %}
             {% endif %}
         {% endif %}

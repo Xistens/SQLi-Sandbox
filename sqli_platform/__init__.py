@@ -23,6 +23,17 @@ app.debug = False
 app.secret_key = b"dummy_key"
 app.config["flag_key"] = "xV6WxVghQ7fFxarqnyj5EYwPmrGZgt4Q"
 
+# Enable/disable debug and guidance for the entire app
+app.config["enable_debug_query"] = True
+app.config["enable_guidance"] = True
+
+# Default value for debug and guidance setting (enabled/disabled)
+app.config["debug_query_default"] = True
+app.config["guidance_default"] = True
+
+# Enable/disable download page for extra material
+app.config["enable_download"] = True
+
 
 # "{FLAG}" will be replaced with the MD5 sum of challenge title and flag_key
 app.config["flag_format"] = "THM{{FLAG}}"

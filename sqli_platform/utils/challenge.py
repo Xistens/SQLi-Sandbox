@@ -5,7 +5,8 @@ from flask import (
     url_for,
     redirect,
     session,
-    request
+    request,
+    abort
 )
 from functools import wraps
 from sqli_platform import app, _configs, clog
@@ -128,3 +129,14 @@ def login_required(bp:str):
             return f(*args, **kwargs)
         return decorated_function
     return _login_required
+
+
+def download_enabled(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        test = app.config["enable_download"]
+        if not test:
+            abort(404)
+            #return redirect(url_for("index"))
+        return f(*args, **kwargs)
+    return decorated_function

@@ -13,7 +13,7 @@ from flask import (
 from jinja2 import TemplateNotFound
 from werkzeug.utils import secure_filename
 from sqli_platform import *
-from sqli_platform.utils.challenge import get_config
+from sqli_platform.utils.challenge import get_config, download_enabled
 
 @app.context_processor
 def context():
@@ -31,6 +31,10 @@ def context():
         cdesc=get_config(bp, "description"),
         cconf=get_config(bp)
     )
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template("404.html"), 404
 
 @app.route('/')
 def index():
@@ -84,15 +88,18 @@ def settings():
 
 @app.route("/download/<path:filename>", defaults={"dir": ""})
 @app.route("/download/<dir>/<path:filename>")
+@download_enabled
 def download(dir, filename):
     directory = f"{DOWNLOAD_PATH}"
     if dir and dir in DOWNLOAD_WHITELIST:
         directory = f"{DOWNLOAD_PATH}/{dir}"
-    return send_from_directory(directory=directory, filename=filename)
+    return send_from_directory(directory=directory, filename=filename, cache_timeout=-1)
+
 
 
 @app.route("/view/<path:filename>", defaults={"dir": ""})
 @app.route("/view/<dir>/<path:filename>")
+@download_enabled
 def view(dir, filename):
     filename = secure_filename(filename)
     if dir:
@@ -113,6 +120,7 @@ def view(dir, filename):
 
 @app.route("/downloads/", defaults={"dir": None})
 @app.route("/downloads/<path:dir>")
+@download_enabled
 def downloads(dir):
     dir_path = DOWNLOAD_PATH
     if dir:

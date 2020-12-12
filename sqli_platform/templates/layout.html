@@ -22,9 +22,11 @@
 <body class="d-flex flex-column min-vh-100">
         <nav class="navbar navbar-expand-md navbar-light bg-light">
             <div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
+                {% if config.get('enable_download', True) %}
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item"><a class="nav-link" href="{{url_for('downloads')}}">Downloads</a></li>
                 </ul>
+                {% endif %}
             </div>
             <div class="mx-auto order-0">
                 <h3 class="navbar-brand mx-auto"><a class="deco-none" href="{{url_for('index')}}">SQL Injection Sandbox</a></h3>
@@ -32,24 +34,28 @@
             <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item">
+                        {% if config.get('enable_debug_query', True) %}
                         <div class="form-check form-check-inline">
-                            {% if session.get('mainapp_query', False) %}
+                            {% if session.get('mainapp_query', config['debug_query_default']) %}
                             <input class="form-check-input settings-event" type="checkbox" checked value="query">
                             {% else %}
                             <input class="form-check-input settings-event" type="checkbox" value="query">
                             {% endif %}
                             <label class="form-check-label" for="inlineCheckbox1">Show Query</label>
                         </div>
+                        {% endif %}
                     </li>
                     <li class="nav-item">
+                        {% if config.get('enable_guidance', True) %}
                         <div class="form-check form-check-inline">
-                            {% if session.get('mainapp_guidance', False) %}
+                            {% if session.get('mainapp_guidance', config['guidance_default']) %}
                             <input class="form-check-input settings-event" type="checkbox" checked value="guidance">
                             {% else %}
                             <input class="form-check-input settings-event" type="checkbox" value="guidance">
                             {% endif %}
                             <label class="form-check-label" for="inlineCheckbox2">Guidance</label>
                         </div>
+                        {% endif %}
                     </li>
                 </ul>
             </div>
