@@ -7,9 +7,6 @@ import importlib
 def load_json(path:str):
     """
     Loads JSON data into memory
-
-    TODO:
-        - Change behaviour on IOError?
     """
     try:
         with open(path, "r") as fd:
@@ -37,6 +34,27 @@ def get_directories(path: str, blacklist: list = ["__pycache__"]) -> list:
             dirs.append(directory)
     return dirs
 
+
+def get_files(dir_path: str) -> list:
+    """ Loads a list that contains tuples with filename and file size
+    from every file in  the directory.
+
+    Args:
+        dir_path:   (str) Path to the directory to get files from
+    Return:
+        files_list: (list) List containing tuples with the file name and file size. If 
+            the file is a directory, the tuple will contain the directory name and the word "dir".
+    """
+    files = os.listdir(dir_path)
+    files_list = []
+
+    for file in files:
+        if os.path.isdir(os.path.join(dir_path, file)):
+            files_list.append((file, "dir"))
+        else:
+            size = os.path.getsize(os.path.join(dir_path, file)) / 1024.0
+            files_list.extend([(file, size)])
+    return files_list
 
 def get_challenge_configs(path: str, config: str) -> list:
     """

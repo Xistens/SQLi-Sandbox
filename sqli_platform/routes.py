@@ -1,4 +1,5 @@
 import json
+import sqli_platform.utils as utils
 from flask import (
     render_template,
     redirect,
@@ -90,22 +91,6 @@ def download(dir, filename):
     return send_from_directory(directory=directory, filename=filename)
 
 
-def get_files(dir_path):
-    """ Loads a list that contains tuples with filename and file size
-    from every file in  the directory.
-    """
-    files = os.listdir(dir_path)
-    files_list = []
-
-    for file in files:
-        if os.path.isdir(os.path.join(dir_path, file)):
-            files_list.append((file, "dir"))
-        else:
-            size = os.path.getsize(os.path.join(dir_path, file)) / 1024.0
-            files_list.extend([(file, size)])
-    return files_list
-
-
 @app.route("/view/<path:filename>", defaults={"dir": ""})
 @app.route("/view/<dir>/<path:filename>")
 def view(dir, filename):
@@ -137,4 +122,4 @@ def downloads(dir):
             return redirect(url_for("downloads"))
     else:
         dir = ""
-    return render_template("downloads.html", dir=dir, files=get_files(dir_path))
+    return render_template("downloads.html", dir=dir, files=utils.get_files(dir_path))
