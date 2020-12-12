@@ -2,8 +2,16 @@
 import os
 import sys
 import logging
-from logging import handlers
 import time
+from logging import handlers
+from flask import request
+
+
+class RequestFormatter(logging.Formatter):
+    def format(self, record):
+        record.url = request.url_rule
+        record.remote_addr = request.remote_addr
+        return super(RequestFormatter, self).format(record)
 
 def init_logs(app):
     """
@@ -47,15 +55,17 @@ def init_logs(app):
             logs["challenges"], maxBytes=10485760, backupCount=5
         )
 
-        formatter = logging.Formatter(
-            "[%(levelname)s] [%(asctime)s]: %(message)s", "%Y-%m-%d %X")
+        # formatter = logging.Formatter(
+        #     "[%(asctime)s] [%(levelname)s]: %(message)s", "%Y-%m-%d %X")
+        formatter = RequestFormatter(
+            "%(remote_addr)s - - [%(asctime)s] [%(levelname)s] %(url)s: %(message)s", "%Y-%m-%d %X")
         mainapp_log.setFormatter(formatter)
         challenge_log.setFormatter(formatter)
 
         logger_mainapp.addHandler(mainapp_log)
         logger_challenges.addHandler(challenge_log)
-    except IOError:
-        pass
+    except IOError as err:
+        raise IOError(err)
 
     # https://docs.python.org/3/howto/logging-cookbook.html#using-file-rotation
     stdout = logging.StreamHandler(stream=sys.stdout)
@@ -72,6 +82,8 @@ def init_logs(app):
 def log_info(logger, fmt, **kwargs):
     """
     Helper function to log INFO messages
+
+    NOT IN USE
 
     Args:
         logger: (str) Options: mainapp, challenges

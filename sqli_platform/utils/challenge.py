@@ -8,7 +8,7 @@ from flask import (
     request
 )
 from functools import wraps
-from sqli_platform import app, _configs
+from sqli_platform import app, _configs, clog
 
 def hash_pwd(string: str):
     """
@@ -72,6 +72,22 @@ def place_flag_schema(schema: str, challenge: str):
         raise IOError(f"Error placing flag in {schema} for challenge {challenge}")
 
 
+def log_query(data: list):
+    """
+    Helper function to log SQL queries for challenges
+
+    Args:
+        data:   (list) A list containing tuples with the SQL queries and parameters
+    """
+    if data:
+        msg = []
+        for d in data:
+            msg.append(f"Query: {d[0]}")
+            if len(d) > 1:
+                msg.append(f"Params: {d[1]}")
+        clog.info("\n" + "\n".join(msg))
+
+
 def format_query(queries: list = []) -> str:
     """
     Helper function to format the database query to display for the user
@@ -91,6 +107,7 @@ def format_query(queries: list = []) -> str:
         else:
             #string += f"Query: {item}\n"
             data.append((item,))
+    log_query(data)
     return data
 
 
