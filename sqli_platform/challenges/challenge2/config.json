@@ -2,7 +2,7 @@
     "name": "challenge2",
     "title": "Broken Authentication 2",
     "tags": ["SQL Injection"],
-    "difficulty": "easy",
+    "difficulty": "medium",
     "description": "Find a way to abuse the login form to dump all the passwords in the database to retrieve the flag without using blind injection.",
     "limiter": "50/minute;1/second",
     "database": {

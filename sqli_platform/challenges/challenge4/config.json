@@ -4,7 +4,7 @@
     "tags": [
         "SQL Injection"
     ],
-    "difficulty": "medium",
+    "difficulty": "hard",
     "description": "The previous vulnerabilities have been fixed, and the login form is no longer vulnerable to SQL injection.The team has added a new note function, allowing users to add notes on their page. The goal of this challenge is to find the vulnerability and dump the database to find the flag",
     "database": {
         "drivername": "sqlite"
