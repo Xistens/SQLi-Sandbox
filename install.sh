@@ -29,7 +29,7 @@ After=network.target
 
 [Service]
 User=$USERNAME
-ExecStart=python3 $CUR_PATH/server.py
+ExecStart=/usr/bin/python3 $CUR_PATH/server.py
 
 [Install]
 WantedBy=multi-user.target
