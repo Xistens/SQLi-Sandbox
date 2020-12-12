@@ -16,6 +16,10 @@ from sqli_platform.utils.challenge import get_config
 
 @app.context_processor
 def context():
+    """
+    Inject variables automatically into the context of the templates.
+    https://flask.palletsprojects.com/en/1.1.x/templating/#context-processors
+    """
     bp = request.blueprint
     return dict(
         cname=bp,
@@ -80,10 +84,10 @@ def settings():
 @app.route("/download/<path:filename>", defaults={"dir": ""})
 @app.route("/download/<dir>/<path:filename>")
 def download(dir, filename):
-    if dir and dir == DOWNLOAD_WHITELIST:
-        return send_from_directory(directory=f"{DOWNLOAD_PATH}/{dir}", filename=filename)
-    else:
-        return send_from_directory(directory=f"{DOWNLOAD_PATH}", filename=filename)
+    directory = f"{DOWNLOAD_PATH}"
+    if dir and dir in DOWNLOAD_WHITELIST:
+        directory = f"{DOWNLOAD_PATH}/{dir}"
+    return send_from_directory(directory=directory, filename=filename)
 
 
 def get_files(dir_path):
