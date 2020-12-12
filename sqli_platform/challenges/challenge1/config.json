@@ -4,6 +4,7 @@
     "tags": ["SQL Injection"],
     "difficulty": "easy",
     "description": "Find a way to bypass the authentication to retrieve the flag.",
+    "limiter": "50/minute;1/second",
     "database": {
         "drivername": "sqlite"
     },
