@@ -2,7 +2,7 @@
 {% block title %}Login{% endblock %}
 {% block body %}
 <div class="login-form">
-    <form action="{{ url_for('.login') }}" onsubmit="return validateform()" name="inputForm" method="GET">
+    <form action="{{ url_for('.login') }}" onsubmit="return validateform()" name="inputForm" method="POST">
         <h2 class="text-center">Log in</h2>
         <div class="form-group">
             <input type="text" class="form-control" placeholder="ProfileID" required="required" name="profileID">
