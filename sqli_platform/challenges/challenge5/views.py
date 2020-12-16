@@ -10,7 +10,13 @@ from flask import (
     flash
 )
 from sqli_platform import app, clog, db
-from sqli_platform.utils.challenge import get_flag, get_config, format_query, login_required
+from sqli_platform.utils.challenge import (
+    get_flag, 
+    get_config, 
+    format_query, 
+    login_required,
+    get_flag_session
+)
 
 """
 The login function has been patched.
@@ -99,10 +105,7 @@ def signup():
 @challenge5.route("/home")
 @login_required(_bp)
 def home():
-    sess = session.get(f"{_bp}_user_id", None)
-    f = ""
-    if sess == 1:
-        f = get_flag(_bp)
+    f = get_flag_session(_bp, 1)
     return render_template(f"{_bp}/index.html", flag=f)
 
 
