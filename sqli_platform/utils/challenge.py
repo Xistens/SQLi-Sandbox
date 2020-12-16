@@ -53,6 +53,25 @@ def get_flag(challenge: str):
     return flag
 
 
+def get_flag_session(challenge: str, uid: int):
+    """
+    Retrives challenge flag if user has the correct <challenge>_user_id 
+    Flask session cookie set.
+
+    Args:
+        challenge:     (str) The name of the challenge
+        uid:           (int) The user ID that must be matched to get the flag
+    Return:
+        Returns the flag (str) if the user ID is matched, 
+            else it will return an empty string.
+    """
+    sess = session.get(f"{challenge}_user_id", None)
+    f = ""
+    if sess == uid:
+        f = get_flag(challenge)
+        clog.info(f"{challenge} - flag: {f}")
+    return f
+
 def place_flag_schema(schema: str, challenge: str):
     """
     Helper function to place flag from config into the database schema.
