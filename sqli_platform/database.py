@@ -164,3 +164,5 @@ class Database(object):
             return cur.lastrowid
         except sqlite3.IntegrityError:
             app_log.error(name, query, args)
+        except sqlite3.OperationalError:
+            app_log.error(name, query, args)
