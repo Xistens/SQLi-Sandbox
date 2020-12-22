@@ -30,6 +30,7 @@ After=network.target
 [Service]
 User=$USERNAME
 ExecStart=/usr/bin/python3 $CUR_PATH/server.py
+Restart=always
 
 [Install]
 WantedBy=multi-user.target
