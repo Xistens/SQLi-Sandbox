@@ -1,7 +1,7 @@
 {
-    "name": "sesqli5",
-    "enabled": true,
-    "title": "SQL Injection 5: UPDATE Statement",
+    "name": "sesqli6",
+    "enabled": false,
+    "title": "SQL Injection 6: Prepared Statements",
     "tags": ["SQL Injection"],
     "difficulty": "easy",
     "database": {
@@ -9,6 +9,6 @@
     },
     "track": {
         "track_id": 2,
-        "position_in_track": 5
+        "position_in_track": 6
     }
 }

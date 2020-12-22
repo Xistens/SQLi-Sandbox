@@ -1,28 +1,16 @@
 drop table if exists usertable;
 CREATE TABLE `usertable` (
-	`UID` integer primary key,
-	`name` varchar(30) NOT NULL,
-	`profileID` varchar(20) DEFAULT NULL,
-	`salary` int(9) DEFAULT NULL,
-	`passportNr` varchar(20) DEFAULT NULL,
-	`email` varchar(300) DEFAULT NULL,
-	`nickName` varchar(300) DEFAULT NULL,
-	`password` varchar(300) DEFAULT NULL
+  `UID` integer primary key,
+  `name` varchar(30) NOT NULL,
+  `profileID` varchar(20) DEFAULT NULL,
+  `salary` int(9) DEFAULT NULL,
+  `passportNr` varchar(20) DEFAULT NULL,
+  `email` varchar(300) DEFAULT NULL,
+  `nickName` varchar(300) DEFAULT NULL,
+  `password` varchar(300) DEFAULT NULL
 );
 
-drop table if exists secrets;
-create table secrets (
-	id integer primary key,
-	author integer not null,
-	secret text not null
-);
 
-insert into secrets (author, secret) values
-	(1, "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer a."),
-	(3, "Donec viverra consequat quam, ut iaculis mi varius a. Phasellus."),
-	(1, "Aliquam vestibulum massa justo, in vulputate velit ultrices ac. Donec."),
-	(5, "Etiam feugiat elit at nisi pellentesque vulputate. Nunc euismod nulla."),
-	(6, "{{FLAG}}");
 
 INSERT INTO `usertable` (`UID`, `name`, `profileID`, `salary`, `passportNr`, `email`, `nickName`, `password`) VALUES
     (1, 'Francois', '10', 250, '8605255014084', '', '', 'ce5ca673d13b36118d54a7cf13aeb0ca012383bf771e713421b4d1fd841f539a'),
