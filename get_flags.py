@@ -1,9 +1,9 @@
 #!/usr/bin/python3
 import json
 import sqli_platform.utils as utils
+from sqli_platform import app
 from sqli_platform.utils.challenge import get_flag
 from sqli_platform import _challenges_path, _challenge_config
-
 
 _configs = utils.get_challenge_configs(_challenges_path, _challenge_config)
 

@@ -16,6 +16,7 @@ _challenges_path = f'{_basedir}/challenges'
 # Name of the config file for a challenge
 _challenge_config = 'config.json'
 
+
 app = Flask(__name__)
 app.debug = False
 
@@ -52,14 +53,14 @@ app_log.debug("Initializing loggers")
 # Load configs from all challenges into memory
 _configs = utils.get_challenge_configs(_challenges_path, _challenge_config)
 
+if __name__ == "__main__":
+    from sqli_platform import database
 
-from sqli_platform import database
+    db = database.Database(app, _configs, _basedir)
 
-db = database.Database(app, _configs, _basedir)
-
-# Import challenges modules and register their blueprints
-utils.load_blueprints(app, limiter, _configs)
+    # Import challenges modules and register their blueprints
+    utils.load_blueprints(app, limiter, _configs)
 
 
-from sqli_platform import routes
+    from sqli_platform import routes
 
