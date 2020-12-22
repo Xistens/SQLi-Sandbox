@@ -29,7 +29,7 @@ app.config["enable_guidance"] = True
 
 # Default value for debug and guidance setting (enabled/disabled)
 app.config["debug_query_default"] = True
-app.config["guidance_default"] = True
+app.config["guidance_default"] = False
 
 # Enable/disable download page for extra material
 app.config["enable_download"] = True
