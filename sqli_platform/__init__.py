@@ -18,7 +18,7 @@ _challenge_config = 'config.json'
 
 
 app = Flask(__name__)
-app.debug = True
+app.debug = False
 
 # Change me
 app.secret_key = b"dummy_key"
@@ -28,6 +28,8 @@ app.config.update(
     SESSION_COOKIE_SAMESITE="Lax",
 
     JSONIFY_PRETTYPRINT_REGULAR = True,
+
+    # APPLICATION CONFIG
     # Enable/disable debug and guidance for the entire app
     enable_debug_query = True,
     enable_guidance = True,
