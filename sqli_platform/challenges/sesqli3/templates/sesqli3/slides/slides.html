@@ -5,4 +5,45 @@
         <p>{{ cdesc }}</p>
     </section>
     {% endif %}
+<section class="desc-slide">
+    <p>Here, the SQL query is the same as in the previous challenge:</p>
+
+<pre><code data-trim data-noescape>
+SELECT uid, name, profileID, salary, passportNr, email, nickName, password FROM usertable WHERE profileID='10' AND
+password='ce5ca67...'
+</code></pre>
+
+<p>But in this case, the malicious user input cannot be injected directly into the application via the login form because some client-side controls have been implemented:</p>
+    </section>
+    <section class="desc-slide">
+<pre><code data-trim data-noescape>
+function validateform() {
+    var profileID = document.inputForm.profileID.value;
+    var password = document.inputForm.password.value;
+
+    if (/^[a-zA-Z0-9]*$/.test(profileID) == false || /^[a-zA-Z0-9]*$/.test(password) == false) {
+        alert("The input fields cannot contain special characters");
+        return false;
+    }
+    if (profileID == null || password == null) {
+        alert("The input fields cannot be empty.");
+        return false;
+    }
+}
+</code></pre>
+</section>
+<section class="desc-slide">
+<p>The JavaScript code requires that both the profileID and the password only contains characters between a-z, A-Z, and 0-9. Client-side controls are only there to improve the user experience and is in no way a security feature as the user has full control over the client and the data it submits. For example, a proxy tool such as <a href="https://portswigger.net/support/using-burp-to-bypass-client-side-javascript-validation">Burp Suite</a> can be used to bypass the client side JavaScript validation.</p>
+<p>This challenge uses a GET request when submitting the login form. The login and the client-side validation can then easily be bypassed by filling out the parameters in the URL. Such as this: </p>
+<pre><code data-trim data-noescape> 
+http://MACHINE_IP:5000/sesqli3/login?profileID=-1' or 1=1--&password=a
+</code></pre>
+</section>
+<section class="desc-slide">
+<p>The browser will automatically urlencode this for us. Urlencoding is needed since the HTTP protocol does not support all characters in the request. When urlencoded, the URL looks as follows:</p>
+<pre><code data-trim data-noescape> 
+/sesqli3/login?profileID=-1%27%20or%201=1--&password=a
+</code></pre>
+<p>The %27 becomes the single quote (') character and %20 becomes a blank space.</p>
+</section>
 </div>

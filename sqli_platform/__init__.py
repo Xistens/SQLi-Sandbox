@@ -11,10 +11,10 @@ _basedir = os.path.abspath(os.path.dirname(__file__))
 DOWNLOAD_PATH = f"{_basedir}/../scripts/"
 DOWNLOAD_WHITELIST = ["challenge3", "challenge4"]
 # Path to challenges
-_challenges_path = f'{_basedir}/challenges'
+_challenges_path = f"{_basedir}/challenges"
 
 # Name of the config file for a challenge
-_challenge_config = 'config.json'
+_challenge_config = "config.json"
 
 
 app = Flask(__name__)

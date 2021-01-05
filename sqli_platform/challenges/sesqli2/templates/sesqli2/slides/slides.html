@@ -5,4 +5,26 @@
         <p>{{ cdesc }}</p>
     </section>
     {% endif %}
+    <section class="desc-slide">
+        <p>This challenge uses the same query as in the previous challenge. However, the parameter expects a string instead of an integer, as can be seen here:</p>
+
+<pre><code data-trim data-noescape>
+... WHERE profileID='10' AND password = ...
+</code></pre>
+
+<p>Since it expects a string, we need to modify our payload to bypass the login slightly. The following line will let us in:</p>
+<pre><code data-trim data-noescape>
+1' or '1'='1'--
+</code></pre>
+    </section>
+    <section class="desc-slide">
+        <p>The final query will then look as follows:</p>
+        <pre><code data-trim data-noescape>
+SELECT uid, name, profileID, salary, passportNr, email, nickName, 
+password FROM usertable WHERE profileID='1' or '1'='1'-- AND password = 'ce5ca67...'
+</code></pre>
+<p>Because of the comment symbol(--), the password check is commented out and will not be performed. Also, since
+    '1'='1' is always true, the query will return all users, making the application log in as the first user in the
+    returned dataset.</p>
+</section>
 </div>

@@ -4,6 +4,7 @@
     "title": "SQL Injection 5: UPDATE Statement",
     "tags": ["SQL Injection"],
     "difficulty": "easy",
+    "allow_guidance": false,
     "database": {
         "drivername": "sqlite"
     },
