@@ -30,6 +30,9 @@
 .problem-list-card {
     cursor: pointer;
 }
+.card {
+    color: #212529;
+}
 .body-med {
     font-size:.88889rem
 }
