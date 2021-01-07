@@ -39,10 +39,10 @@ If `app.debug` is set to True, then the API will be enabled where it is possible
 |tags| Currently not in use | List of strings | No| |
 |difficulty| The difficulty of the challenge |String| Yes | |
 | description | The challenge description shown to the user | String | No | |
-|limier| Rate limiting for challenge | String | No | If not presented, rate limiting is disabled |
+|limier| Rate limiting for challenge | String | No | Disabled |
 |database: drivername| Only supporting SQLite, but added incase support for other drivers should be needed | String | Yes| |
 |track: track_id| ID of the track/group the challenge belongs to |Integer|Yes| |
 |track: position_in_track| Used to order challenges inside the track|Integer|Yes| |
-|enabled|Enable/disable challenge |Bool| no| Default enabled|
-|allow_guidance| Enable/disable tutorial slides for challenge |Bool| no| Default enabled |
-|allow_debug_query| Enable/disable SQL query display for challenge |Bool| no| Default enabled |
+|enabled|Enable/disable challenge |Bool| no| Enabled|
+|allow_guidance| Enable/disable tutorial slides for challenge |Bool| no| Enabled |
+|allow_debug_query| Enable/disable SQL query display for challenge |Bool| no| Enabled |
