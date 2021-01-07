@@ -101,7 +101,9 @@ def download(dir, filename):
 @app.route("/view/<dir>/<path:filename>")
 @download_enabled
 def view(dir, filename):
-    filename = secure_filename(filename)
+    if not filename == "__init__.py":
+        filename = secure_filename(filename)
+        
     if dir:
         if dir in DOWNLOAD_WHITELIST:
             dir_path = f"{DOWNLOAD_PATH}{dir}/{filename}"
