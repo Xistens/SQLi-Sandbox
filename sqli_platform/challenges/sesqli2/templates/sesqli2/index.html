@@ -1,14 +1,41 @@
-{% extends "challenges/challenge1/layout.html" %}
+{% extends "challenges/sesqli/layout.html" %}
 {% block title %}Home{% endblock %}
 {% block body %}
 <!-- Begin Page Content -->
 <div class="container main pb">
     <div class="card shadow mb-4">
         <div class="card-header py-3">
-            Messages
+            {{csess_obj['name']}}'s Profile
         </div>
         <div class="card-body">
-            {{ flag }}
+            <table>
+                {% if flag %}
+                <tr>
+                    <td>Flag</td>
+                    <td>{{ flag }}</td>
+                </tr>
+                {% endif %}
+                <tr>
+                    <td>Employee ID</td>
+                    <td>{{csess_obj['profileID']}}</td>
+                </tr>
+                <tr>
+                    <td>Salary</td>
+                    <td>R{{csess_obj['salary']}}</td>
+                </tr>
+                <tr>
+                    <td>Passport Number</td>
+                    <td>{{csess_obj['passportNr']}}</td>
+                </tr>
+                <tr>
+                    <td>Nick Name</td>
+                    <td>{{csess_obj['nickName']}}</td>
+                </tr>
+                <tr>
+                    <td>E-mail</td>
+                    <td>{{csess_obj['email']}}</td>
+                </tr>
+            </table>
         </div>
     </div>
 </div><!-- /.container -->

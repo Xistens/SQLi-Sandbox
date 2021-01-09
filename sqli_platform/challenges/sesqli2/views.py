@@ -10,7 +10,14 @@ from flask import (
     flash
 )
 from sqli_platform import (app, clog, db)
-from sqli_platform.utils.challenge import (get_flag, get_config, format_query, hash_pwd, login_required)
+from sqli_platform.utils.challenge import (
+    get_flag, 
+    get_config, 
+    format_query, 
+    hash_pwd, 
+    login_required,
+    get_flag_session
+)
 
 """
 
@@ -91,7 +98,8 @@ def profile():
 @sesqli2.route("/home")
 @login_required(_bp)
 def home():
-    return render_template(f"{_templ}/index.html", csess_obj=get_profile())
+    f = get_flag_session(_bp, 1)
+    return render_template(f"{_bp}/index.html", csess_obj=get_profile(), flag=f)
 
 
 @sesqli2.route("/logout")
