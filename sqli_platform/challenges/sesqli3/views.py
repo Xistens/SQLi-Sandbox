@@ -94,7 +94,7 @@ def profile():
 @sesqli3.route("/home")
 @login_required(_bp)
 def home():
-    f = get_flag_session(_bp, 6)
+    f = get_flag_session(_bp, 1)
     return render_template(f"{_bp}/index.html", csess_obj=get_profile(), flag=f)
 
 
