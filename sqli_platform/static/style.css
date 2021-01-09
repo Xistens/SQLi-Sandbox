@@ -12,6 +12,9 @@
     margin: 0 0 15px;
 }
 
+.navbar-light .navbar-nav .nav-link {
+    overflow-wrap: anywhere;
+}
 
 .form-control,
 .btn {
