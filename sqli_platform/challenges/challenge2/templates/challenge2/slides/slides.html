@@ -1,0 +1,77 @@
+<div class="slides">
+    {% if cdesc %}
+    <section class="desc-slide">
+        <h2>Goal:</h2>
+        <p>{{ cdesc }}</p>
+    </section>
+    {% endif %}
+    <section>
+        <p>
+        The login form is vulnerable to SQL injection, and it is possible to bypass the login by using <code>' OR 1=1--</code>
+        as a username. Before we can dump all the passwords, we need to identify places on the page where data from the login
+        query is used.
+        </p> 
+        <p>
+            Log in with <code>' OR 1=1--</code> as username.
+        </p>
+    </section>
+    <section>
+         <p>
+        The name of the currently logged-on user is displayed in the top right corner. It might
+        be possible to dump the data here or in the session cookie. We can use a UNION-based attack to dump the passwords.
+        </p>       
+        <p>
+        There are two key requirements that must be met for a UNION based injection to work:
+        <ul>
+            <li>The number of columns in the injected query must be the same as in the original query</li>
+            <li>The data types for each column must match the corresponding type</li>
+        </ul>
+        </p>
+    </section>
+    <section>
+        <p>
+        To identify the number of columns, we can systematically inject queries with different numbers of columns until the query is successful, which in this case means that we will get logged in. 
+        </p>
+        <p>
+        Try to log in with the examples below and increment the columns until the query is successful.
+        <pre><code data-trim data-noescape>
+            ' UNION SELECT 1--
+            ' UNION SELECT 1,2--
+        </code></pre>
+        </p>
+    </section>
+    <section>
+        <p>
+        Using <code>' UNION SELECT 1,2--</code> as username, we match the number of columns in the original SQL query, and the
+        application lets us in. After logging in, we can see that the username is replaced with the integer 2 (top right
+        corner), which we used as a name for column two in the injected query.
+        </p>
+    </section>
+    <section>
+        <p>
+        The next step is to identify what database is in use. There are a few ways to do this, but the easiest way is to ask the
+        database to identify itself. The following queries can be used to identify MySQL/MSSQL and SQLite:
+        </p>
+        <pre><code data-trim data-noescape>
+            # MySQL and MSSQL
+            ' UNION SELECT 1, @@version--
+
+            # For SQLite
+            ' UNION SELECT 1, sqlite_version()--
+        </code></pre>
+    </section>
+    <section>
+        <p>
+        With this information, it is possible to enumerate the database. A cheat sheet can help with this, for example, <a href="https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/SQL%20Injection/SQLite%20Injection.md">PayloadsAllTheThings</a>. 
+        </p>
+        <p>
+            With the help of <a href="https://sqlite.org/lang_aggfunc.html#groupconcat">group_concat()</a>, all passwords in the <code>users</code> table can be dumped.
+        </p>
+        <p>
+            Log in with the following query to dump all the passwords:
+            <pre><code data-trim data-noescape>
+            ' UNION SELECT 1,group_concat(password) FROM users--
+            </code></pre>
+        </p>
+    </section>
+</div>

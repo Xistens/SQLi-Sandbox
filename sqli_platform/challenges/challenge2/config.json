@@ -1,13 +1,10 @@
 {
     "name": "challenge2",
-    "title": "Vulnerable Notes",
-    "category": "Web",
-    "tags": [
-        "SQL Injection"
-    ],
+    "title": "Broken Authentication 2",
+    "tags": ["SQL Injection"],
     "difficulty": "medium",
-    "description": "The login function has been patched, but the note function has been enabled. Find a way to dump the database and retrieve the flag.",
-    "flag": "THM{FLAGCHALLENGE2}",
+    "description": "Find a way to abuse the login form to dump all the passwords in the database to retrieve the flag without using blind injection.",
+    "limiter": "50/minute;1/second",
     "database": {
         "drivername": "sqlite"
     },

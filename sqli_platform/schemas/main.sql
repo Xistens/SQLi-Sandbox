@@ -4,6 +4,7 @@ PRAGMA foreign_keys = OFF;
 
 drop table if exists Track;
 drop table if exists Challenge;
+drop table if exists Track_item;
 
 PRAGMA foreign_keys = ON;
 
@@ -29,5 +30,7 @@ create table Track_item (
     track_position integer not null
 );
 
-INSERT INTO Track (track_name) VALUES ("Vulnerable Startup");
+INSERT INTO Track (track_name) VALUES 
+    ("Vulnerable Startup"),
+    ("Introduction to SQL Injection");
 

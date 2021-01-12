@@ -6,40 +6,58 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}{% endblock %}</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script> -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}" />
+    <!-- <script src="{{ url_for('static', filename='js/socket.io.js') }}"></script> -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+
+    <!-- reveal -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='dist/reset.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='dist/reveal.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='dist/theme/white.css') }}"  id="theme">
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='plugin/highlight/default.css') }}" id="highlight-theme">
 </head>
 
-<body>
-    <nav class="navbar navbar-default">
-        <div class="container">
-            <ul class="nav navbar-nav">
-                {% if not csession %}
-                <li><a href="{{ url_for('.login') }}">Login</a></li>
-                {% else %}
-                <li><a href="{{ url_for('.home') }}">Home</a></li>
-                <li><a href="{{ url_for('.notes') }}">Notes</a></li>
-                <li><a href="{{ url_for('.changepwd') }}">Profile</a></li>
-                <li><a href="{{ url_for('.logout') }}">Logout</a></li>
-                {% endif %}
+<body class="d-flex flex-column min-vh-100">
+    <nav class="navbar navbar-expand-md navbar-light bg-light">
+        <div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
+            <ul class="navbar-nav mr-auto">
+            {% if not csession %}
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('.login') }}">Login</a></li>
+            {% else %}
+                <li class="nav-item"><a class="nav-link"  href="{{ url_for('.home') }}">Home</a></li>
+                <li class="nav-item"><a class="nav-link"  href="{{ url_for('.notes') }}">Notes</a></li>
+                <li class="nav-item"><a class="nav-link"  href="{{ url_for('.changepwd') }}">Profile</a></li>
+                <li class="nav-item"><a class="nav-link"  href="{{ url_for('.logout') }}">Logout</a></li>
+            {% endif %}
             </ul>
-            <div class="navbar-text navbar-right">
-                {% if csession %}
-                Logged in as {{ csession_name }} | 
-                {% endif %}
-                <a href="{{ url_for('index') }}" >[Main Menu]</a>
-            </div>  
+        </div>
+        <div class="mx-auto order-0">
+            <h3 class="navbar-brand mx-auto"><a class="deco-none" href="{{ url_for('.home') }}">{{ ctitle }}</a></h3>
+        </div>
+        <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <p class="nav-link">
+                    {% if csession %}
+                    Logged in as {{ csession_name }} |
+                    {% endif %}
+                    </p>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('index') }}">[Main Menu]</a>
+                </li>
+            </ul>
         </div>
     </nav>
-    {% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-    {% for category, message in messages %}
-    <div class="alert alert-{{ category }}">
-        {{ message }}
-    </div>
-    {% endfor %}
-    {% endif %}
-    {% endwith %}
-    {% block body %}{% endblock %}
+    <div class="wrapper flex-grow-1 overflow-auto">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        {% block body %}{% endblock %}

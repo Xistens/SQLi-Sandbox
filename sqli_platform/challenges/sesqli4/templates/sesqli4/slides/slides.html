@@ -1,0 +1,16 @@
+<div class="slides">
+    {% if cdesc %}
+    <section class="desc-slide">
+        <h2>Goal:</h2>
+        <p>{{ cdesc }}</p>
+    </section>
+    {% endif %}
+<section class="desc-slide">
+<p>When submitting the login form for this challenge, it uses the HTTP POST method.  It is possible to either remove/disable the JavaScript validating the login form or submit a valid request and intercept it with aproxy tool such as Burp Suite and modify it.</p>
+<p>For information on how Burp Suite works, visit the <a href="https://tryhackme.com/room/rpburpsuite">Burp Suite</a> room on <a href="https://tryhackme.com/room/rpburpsuite">TryHackMe</a>.</p>
+</section>
+
+<section class="desc-slide">
+    <img src="{{ url_for('static', filename='img/sesqli/chal4.png') }}" width="700" height="270">
+</section>
+</div>

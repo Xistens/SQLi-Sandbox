@@ -1,0 +1,14 @@
+{
+    "name": "sesqli3",
+    "title": "SQL Injection 3: URL Injection",
+    "tags": ["SQL Injection"],
+    "enabled": true,
+    "difficulty": "easy",
+    "database": {
+        "drivername": "sqlite"
+    },
+    "track": {
+        "track_id": 2,
+        "position_in_track": 3
+    }
+}

@@ -2,16 +2,18 @@
     width: 340px;
     margin: 50px auto;
 }
-
 .login-form form {
     margin-bottom: 15px;
-    background: #f7f7f7;
-    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+    background: #f8f9fc;
+    /* box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3); */
     padding: 30px;
 }
-
 .login-form h2 {
     margin: 0 0 15px;
+}
+
+.navbar-light .navbar-nav .nav-link {
+    overflow-wrap: anywhere;
 }
 
 .form-control,
@@ -31,6 +33,9 @@
 .problem-list-card {
     cursor: pointer;
 }
+.card {
+    color: #212529;
+}
 .body-med {
     font-size:.88889rem
 }
@@ -47,7 +52,6 @@
 .main {
     padding-top: 1.5em;
 }
-
 
 
 .diff-easy {
@@ -84,4 +88,28 @@
 .deco-none:hover {
   color: inherit;
   text-decoration: inherit;
+}
+
+.reveal p {
+    font-size: 20px !important;
+}
+
+.reveal pre {
+    font-size: 15px !important;
+}
+
+.reveal .desc-slide h1{
+    font-size: 40px !important;
+}
+.reveal .desc-slide h2{
+    font-size: 30px !important;
+}
+.reveal li {
+    font-size: 20px !important;
+}
+
+
+table {
+    table-layout: fixed;
+	width: 100%;
 }

@@ -2,7 +2,7 @@
 import sqlite3
 import os
 from sqli_platform import app_log
-from sqli_platform.utils.flag import place_flag_schema
+from sqli_platform.utils.challenge import place_flag_schema
 
 
 class Database(object):
@@ -60,10 +60,11 @@ class Database(object):
             # Add challenge information to db
             tags = ", ".join(c.get("tags", ""))
             difficulty = c["difficulty"].lower().capitalize()
+            description = c.get("description", "")
             rowid = self.sql_insert(
                 "main", 
                 "INSERT INTO Challenge (name, title, tags, difficulty, description) VALUES (?, ?, ?, ?, ?)", 
-                [c["name"], c["title"], tags, difficulty, c["description"]]
+                [c["name"], c["title"], tags, difficulty, description]
             )
 
             # Add track information to db
@@ -124,7 +125,8 @@ class Database(object):
             FROM 
                 Track_Item TI
                 JOIN challenge c ON c.challenge_id=TI.challenge_id
-                LEFT JOIN track t ON t.track_id=TI.track_id
+                JOIN track t ON t.track_id=TI.track_id
+            ORDER BY t.track_id DESC
             """
         )
 
@@ -155,7 +157,12 @@ class Database(object):
 
 
     def sql_insert(self, name: str, query: str, args: tuple = ()):
-        app_log.debug(query)
-        cur = self.get_db(name).execute(query, args)
-        cur.execute("COMMIT")
-        return cur.lastrowid
+        try:
+            app_log.debug(query)
+            cur = self.get_db(name).execute(query, args)
+            cur.execute("COMMIT")
+            return cur.lastrowid
+        except sqlite3.IntegrityError:
+            app_log.error(name, query, args)
+        except sqlite3.OperationalError:
+            app_log.error(name, query, args)

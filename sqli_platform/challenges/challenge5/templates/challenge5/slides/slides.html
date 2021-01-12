@@ -1,0 +1,35 @@
+<div class="slides">
+    {% if cdesc %}
+    <section class="desc-slide">
+        <h2>Goal:</h2>
+        <p>{{ cdesc }}</p>
+    </section>
+    {% endif %}
+    <section>
+<p>
+The developer has used a placeholder for the password parameter (parameterized query) because this input comes directly from the user. The
+username does not come directly from the user but is rather fetched from the database. Therefore, the developer has
+thought that the username was safe to use and concatenated it directly into the query.
+</p>
+
+<pre><code data-trim data-noescape>
+UPDATE users SET password = ? WHERE username = '" + username + "'
+</code></pre>
+<p>
+To exploit this vulnerability and gain access to the admin’s account, we can create a user with the name
+<code>admin’ -- -</code>.
+</p>
+    </section>
+    <section>
+<p>
+After having registered the malicious user, we can update the password for our user. Since the username gets
+concatenated directly into the SQL query, the executed query will look as follows:
+</p>
+        <pre><code data-trim data-noescape>
+        UPDATE users SET password = ? WHERE username = 'admin' -- -'
+        </code></pre>
+<p>
+    Instead of updating the password for admin’ -- -, the application will update the password for the admin user. After updating the password, it is possible to log in as admin with the new password and view the flag.
+</p>
+    </section>
+</div>

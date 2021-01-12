@@ -1,29 +1,46 @@
 {% extends "challenges/challenge1/layout.html" %}
 {% block title %}Notes{% endblock %}
 {% block body %}
-<div class="container">
-    <form action="{{ url_for('.notes') }}" method="post">
-        <h2 class="text-center">Note</h2>
-        <h4 class="text-center">Welcome {{ user }}</h4>
-        <div class="form-group">
-            <label for="title">Title:</label>
-            <input type="text" class="form-control" id="title" name="title">
-        </div>
-        <div class="form-group">
-            <label for="note">Note:</label>
-            <textarea class="form-control" rows="10" id="note" name="note"></textarea>
-        </div>
-        <div class="form-group">
-            <button type="submit" class="btn btn-primary">Insert</button>
-        </div>
-    </form>
-    {% for result in notes %}
-    <div class="panel panel-default">
-        <div class="panel-heading">{{ result["title"] }}</div>
-        <div class="panel-body">{{ result["note"] }}</div>
+<div class="container main pb">
+
+    <div class="card">
+        <form action="{{ url_for('.notes') }}" method="post">
+            <div class="card-header text-center">
+                <h2>Note</h2>
+                <span>Welcome {{ user }}</span>
+            </div>
+            <div class="card-body">
+                <div class="form-group">
+                    <label for="title">Title:</label>
+                    <input type="text" class="form-control" id="title" name="title">
+                </div>
+                <div class="form-group">
+                    <label for="note">Note:</label>
+                    <textarea class="form-control" rows="10" id="note" name="note"></textarea>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">Insert</button>
+                </div>
+            </div>
+        </form>
     </div>
-    {% endfor %}
+    {% if notes %}
+    <div class="card">
+        <div class="card-body">
+            {% for result in notes %}
+            <div class="card b-offset">
+                <div class="card-header">{{ result["title"] }}</div>
+                <div class="card-body">
+                    <p class="card-text">{{ result["note"] }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
 </div>
+</div>
+{% include 'footer.html' %}
 </body>
 
 </html>

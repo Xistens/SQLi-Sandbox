@@ -1,11 +1,10 @@
 {
     "name": "challenge1",
-    "title": "Bad Authentication",
-    "category": "Web",
+    "title": "Broken Authentication",
     "tags": ["SQL Injection"],
     "difficulty": "easy",
-    "description": "Break-in as an administrator and retrieve the flag.",
-    "flag": "THM{AuTh}",
+    "description": "Find a way to bypass the authentication to retrieve the flag.",
+    "limiter": "50/minute;1/second",
     "database": {
         "drivername": "sqlite"
     },

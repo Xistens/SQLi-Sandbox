@@ -1,0 +1,38 @@
+{% extends "challenges/sesqli/layout.html" %}
+{% block title %}Login{% endblock %}
+{% block body %}
+<div class="login-form">
+    <form action="{{ url_for('.login') }}" onsubmit="return validateform()" name="inputForm" method="POST">
+        <h2 class="text-center">Log in</h2>
+        <div class="form-group">
+            <input type="text" class="form-control" placeholder="ProfileID" required="required" name="profileID">
+        </div>
+        <div class="form-group">
+            <input type="password" class="form-control" placeholder="Password" required="required" name="password">
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary btn-block">Log in</button>
+        </div>
+    </form>
+</div>
+</div>
+<script>
+    function validateform() {
+        var profileID = document.inputForm.profileID.value;
+        var password = document.inputForm.password.value;
+
+        if (/^[a-zA-Z0-9]*$/.test(profileID) == false || /^[a-zA-Z0-9]*$/.test(password) == false) {
+            alert("The input fields cannot contain special characters");
+            return false;
+        }
+        if (profileID == null || password == null) {
+            alert("The input fields cannot be empty.");
+            return false;
+        }
+    }  
+</script>
+{% include 'footer.html' %}
+</body>
+
+</html>
+{% endblock %}

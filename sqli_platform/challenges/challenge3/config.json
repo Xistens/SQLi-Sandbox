@@ -1,13 +1,9 @@
 {
     "name": "challenge3",
-    "title": "Update Password",
-    "category": "Web",
-    "tags": [
-        "SQL Injection"
-    ],
+    "title": "Broken Authentication 3: Blind Injection",
+    "tags": ["SQL Injection"],
     "difficulty": "medium",
-    "description": "The developers have patched the login and note function. They also enabled the update password function and would like you to test it.",
-    "flag": "THM{CHALLENGE3FLAG}",
+    "description": "It is no longer possible to extract data from the Flask session cookie or via the username display. However, the login form is still vulnerable. Abuse the login form with blind SQL injection to extract the admin's password, preferably with a custom script.",
     "database": {
         "drivername": "sqlite"
     },

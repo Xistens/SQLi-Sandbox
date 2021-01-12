@@ -1,0 +1,14 @@
+{
+    "name": "sesqli4",
+    "title": "SQL Injection 4: POST Injection",
+    "enabled": true,
+    "tags": ["SQL Injection"],
+    "difficulty": "easy",
+    "database": {
+        "drivername": "sqlite"
+    },
+    "track": {
+        "track_id": 2,
+        "position_in_track": 4
+    }
+}

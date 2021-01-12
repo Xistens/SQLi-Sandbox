@@ -15,25 +15,35 @@
                     </div>
                     <div class="card-body">
                         {% for i in v %}
+                        {% if i.description %}
                         <div class="card b-offset border-left-{{ i.difficulty.lower() }}">
                             <div class="card-header py-3">
                                 <div class="pull-right body-med diff-{{i.difficulty.lower()}}">{{ i.difficulty }}</div>
                                 <h6 class="m-0 font-weight-bold"><a class="deco-none" href="{{url_for(i.name + '.home')}}">{{ i.title }}</a></h6>
+                                <p class="small">{{ i.name }}</p>
                             </div>
                             <div class="card-body">
                                 <p>{{ i.description }}</p>
-                                <a href="{{url_for(i.name + '.home')}}">Start</a>
+                                <br>
+                                <a href="{{url_for(i.name + '.home')}}">Go to Challenge</a>
                             </div>
                         </div><!-- /.card .shadow-->
+                        {% else %}
+                        <div class="card b-offset border-left-{{ i.difficulty.lower() }}">
+                            <div class="card-header py-3">
+                                <div class="pull-right body-med"><a href="{{url_for(i.name + '.home')}}">Go to Challenge</a> | <span class="diff-{{i.difficulty.lower()}}">{{ i.difficulty }}</span></div>
+                                <h6 class="m-0 font-weight-bold"><a class="deco-none" href="{{url_for(i.name + '.home')}}">{{ i.title }}</a></h6>
+                                <p class="small">{{ i.name }}</p>
+                            </div>
+                        </div><!-- /.card .shadow-->
+                        {% endif %}
                         {% endfor %}
                     </div>
                 </div>
             {% endfor %}
         </div><!-- /.container-fluid -->
-        </div><!-- End of Main Content -->
-        
-        </div><!-- End of Content Wrapper -->
-        </div>
+        </div><!-- End of Main Content --> 
+        {% include 'settings.html' %}
     </body>
 </html>
 {% endblock %}

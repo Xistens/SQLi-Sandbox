@@ -1,0 +1,14 @@
+{
+    "name": "sesqli6",
+    "enabled": false,
+    "title": "SQL Injection 6: Prepared Statements",
+    "tags": ["SQL Injection"],
+    "difficulty": "easy",
+    "database": {
+        "drivername": "sqlite"
+    },
+    "track": {
+        "track_id": 2,
+        "position_in_track": 6
+    }
+}

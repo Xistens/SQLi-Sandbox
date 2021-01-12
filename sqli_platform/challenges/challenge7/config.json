@@ -1,0 +1,19 @@
+{
+    "name": "challenge7",
+    "title": "Book Title 2",
+    "tags": [
+        "SQL Injection"
+    ],
+    "difficulty": "Hard",
+    "description": "In this challenge, the application performs a query early in the process. It then uses the result from the first query in the second query later without sanitization. Both queries are vulnerable, and the first query can be exploited through blind SQL injection. However, since the second query is also vulnerable, it is possible to simplify the exploitation and use UNION based injection instead of Boolean-based blind injection; making the exploitation easier and less noisy. The goal of the task is to abuse this vulnerability without using blind injection and retrieve the flag.",
+    "allow_guidance": true,
+    "allow_debug_query": true,
+    "limiter": "50/minute;1/second",
+    "database": {
+        "drivername": "sqlite"
+    },
+    "track": {
+        "track_id": 1,
+        "position_in_track": 7
+    }
+}

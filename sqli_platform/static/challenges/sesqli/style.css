@@ -1,0 +1,114 @@
+label{
+	font-family: "Roboto";
+	font-weight: 700;
+	font-size: 20px;
+	display: inline-block;
+	float: center;
+	clear: center;
+	width: 150px;
+	text-align: Left;
+}
+input {
+	font-family: "Roboto";
+	font-weight: 700;
+	font-size: 20px;
+	display: inline-block;
+	float: center;
+	width: 500px;
+  padding: 12px 10px;
+  margin: 8px 0;
+  box-sizing: border-box;
+  border: 2px solid green;
+  border-radius: 4px;
+}
+body {
+	margin: 10;
+	padding: 10;
+	background: #EAFAF1;
+}
+p{
+font-family: "Roboto";
+	font-weight: 500;
+	font-size: 20px;
+	display: inline-block;
+	float: center;
+	clear: center;
+	text-align: Left;
+}
+button {
+	background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding: 7px 10px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 20px;
+  font-family: "Roboto";
+	font-weight: 500;
+}
+button:hover{
+  background-color: green;
+}
+table {
+	border-collapse: collapse;
+	width: 500px;
+	font-family: "Roboto";
+	font-weight: 500;
+	font-size: 20px;
+	margin-left:auto; 
+    margin-right:auto;
+	
+}
+th,td{
+	text-align: left;
+	padding: 8px;
+	font-family: "Roboto";
+	font-weight: 500;
+	font-size: 20px;
+	border-bottom: 1px solid #ddd;
+	border-top: 1px solid #ddd;
+	border-left: 1px solid #ddd;
+	border-bottom: 1px solid #ddd;
+}
+tr:nth-child(even){background-color: #85C1E9}
+tr:nth-child(odd){background-color: #7FB3D5}
+.newanchor:link, .newanchor:visited {
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding: 7px 10px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 20px;
+  font-family: "Roboto";
+  font-weight: 500;
+}
+
+.newanchor:hover, .newanchor:active {
+  background-color: green;
+}
+.wrapper {
+	text-align: center;
+}
+.wrapperL {
+	text-align: left;
+	margin-top: 20;
+}
+.wrapperR {
+	text-align: right;
+}
+.buttonHolder{
+	text-align: center;
+}
+.footer {
+	text-align: center;
+   	height: 300 px;
+	clear: both;
+	position: bottom;
+}
+.logoff
+{
+	background-color: #b23b3b;
+}

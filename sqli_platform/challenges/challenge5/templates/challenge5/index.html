@@ -1,14 +1,20 @@
 {% extends "challenges/challenge1/layout.html" %}
 {% block title %}Home{% endblock %}
 {% block body %}
-<div class="container">
-    <div class="panel panel-default">
-        <div class="panel-heading">Changes</div>
-        <div class="panel-body">
-            Testing a new function to search for books, check it out <a href="{{ url_for('.book') }}?title=test">here</a>
+<!-- Begin Page Content -->
+<div class="container main pb">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            Messages
+        </div>
+        <div class="card-body">
+            {{ flag }}
         </div>
     </div>
-</div>
+</div><!-- /.container -->
+</div><!-- End of wrapper -->
+
+{% include 'footer.html' %}
 </body>
 
 </html>

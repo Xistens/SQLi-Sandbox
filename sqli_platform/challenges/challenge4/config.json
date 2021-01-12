@@ -1,13 +1,11 @@
 {
     "name": "challenge4",
-    "title": "Plenty of Books",
-    "category": "Web",
+    "title": "Vulnerable Notes",
     "tags": [
         "SQL Injection"
     ],
-    "difficulty": "medium",
-    "description": "All the previous vulnerabilities are patched, but the developers have added a new Book feature.",
-    "flag": "THM{5ydwrc97LfZZqsxBVNBJHTAYNvExnYPQ}",
+    "difficulty": "hard",
+    "description": "The previous vulnerabilities have been fixed, and the login form is no longer vulnerable to SQL injection.The team has added a new note function, allowing users to add notes on their page. The goal of this challenge is to find the vulnerability and dump the database to find the flag",
     "database": {
         "drivername": "sqlite"
     },

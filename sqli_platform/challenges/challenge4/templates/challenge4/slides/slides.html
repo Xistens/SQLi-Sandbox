@@ -1,0 +1,48 @@
+<div class="slides">
+    {% if cdesc %}
+    <section class="desc-slide">
+        <h2>Goal:</h2>
+        <p>{{ cdesc }}</p>
+    </section>
+    {% endif %}
+    <section>
+        <p>
+The notes function is not directly vulnerable because it uses parameterized queries to insert notes. Even though
+parameterized queries are used, the server will accept malicious data and place it in the database. Since the
+application might accept malicious data, all queries must use parameterized queries, not only the queries directly
+accepting user input.
+        </p>
+    </section>
+    <section>
+        <p>The query that fetches all of the notes belonging to a user does not use parameterized queries. The username is
+concatenated directly into the query, making it vulnerable to SQL injection.</p>
+<pre><code data-trim data-noescape>
+SELECT title, note FROM notes WHERE username = '" + username + "'
+</code></pre>
+    </section>
+    <section>
+<p>By registering a user with a malicious name, everything will be fine until the user navigates to the notes page and the
+unsafe query tries to fetch the data for the malicious user.</p>
+<p>
+Create a user with the name <code>‘ UNION SELECT 1,2’</code> and navigate to the notes page. With this name, we can see that the
+first column in the query is the note title, and the second column is the note itself.
+</p>
+    </section>
+    <section>
+<p>
+    With this knowledge, this is easy to exploit. For example, to get all the tables from the database, we can create a user
+    with the name:
+</p>
+<pre><code data-trim data-noescape>
+' union select 1,group_concat(tbl_name) from sqlite_master where
+type='table' and tbl_name not like 'sqlite_%''
+</code></pre>
+
+<p>
+    To find the flag among the passwords, register a user with the name:
+</p>
+<pre><code data-trim data-noescape>
+' union select 1,group_concat(password) from users'
+</code></pre>
+    </section>
+</div>

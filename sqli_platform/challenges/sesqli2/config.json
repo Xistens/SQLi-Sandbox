@@ -1,0 +1,13 @@
+{
+    "name": "sesqli2",
+    "title": "SQL Injection 2: Input Box String",
+    "tags": ["SQL Injection"],
+    "difficulty": "easy",
+    "database": {
+        "drivername": "sqlite"
+    },
+    "track": {
+        "track_id": 2,
+        "position_in_track": 2
+    }
+}

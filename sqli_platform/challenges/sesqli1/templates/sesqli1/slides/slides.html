@@ -1,0 +1,40 @@
+<div class="slides">
+    {% if cdesc %}
+    <section class="desc-slide">
+        <h2>Goal:</h2>
+        <p>{{ cdesc }}</p>
+    </section>
+    {% endif %}
+    <section class="desc-slide">
+        <p>When a user logs in, the application performs the following query:</p>
+<pre><code data-trim data-noescape>
+SELECT uid, name, profileID, salary, passportNr, email, nickName, 
+password FROM usertable WHERE profileID=10 AND password = 'ce5ca67...'
+</code></pre>
+
+    </section>
+    <section class="desc-slide">
+
+<p>When logging in, the user supplies input to the profileID parameter. For this challenge, the parameter accepts an integer, as can be seen here:
+</p>
+
+<pre><code data-trim data-noescape>
+... WHERE profileID=10 AND password = ...
+</code></pre>
+
+<p>
+Since there is no input sanitization, it is possible to bypass the login by using the code below as ProfileID: 
+</p>
+<pre><code data-trim data-noescape>
+1 or 1=1--
+</code></pre>
+    </section>
+    <section class="desc-slide">
+<p>The final query will then look as follows:</p>
+<pre><code data-trim data-noescape>
+SELECT uid, name, profileID, salary, passportNr, email, nickName, 
+password FROM usertable WHERE profileID=1 or 1=1-- AND password = 'ce5ca67...'
+</code></pre>
+<p>Because of the comment symbol(--), the password check is commented out and will not be performed. Also, since 1=1 is always true, the query will return all users, making the application log in as the first user in the returned dataset.</p>
+    </section>
+</div>
