@@ -46,3 +46,5 @@ If `app.debug` is set to True, then the API will be enabled where it is possible
 |enabled|Enable/disable challenge |Bool| no| Enabled|
 |allow_guidance| Enable/disable tutorial slides for challenge |Bool| no| Enabled |
 |allow_debug_query| Enable/disable SQL query display for challenge |Bool| no| Enabled |
+
+Copyright (C) 2021 Henrik Pedersen | MIT License.
