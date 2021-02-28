@@ -1,3 +1,8 @@
+## SQLi-Sandbox
+SQLi-Sandbox is the SQL injection lab (sqlilab) hosted on TryHackMe (https://tryhackme.com/room/sqlilab). The lab introduces the user to SQL injection and covers various SQL injection categories such as second-order, blind, and UNION-based injection.  
+
+The platform has two tracks, where a track is a combination of challenges. The first track cover introduction to SQL injection, which teaches the student the essential knowledge. The second track tries to build a story of a start-up company where the student starts by exploiting the login page. As the story progresses, the developers fix the various injection points. However, they patch some of the vulnerabilities incorrectly, leading to new vulnerabilities, and they add new functionality to the page that also turns out to be vulnerable against SQL injection. The second track heavily focuses on second-order injection since this category lacked the most from other platforms. The following is a demonstration of two challenges from the second part, the start-up company.  
+
 ## Install
 1. `git clone https://github.com/Xistens/SQLi-Sandbox.git`
 2. Navigate to the SQLi-Sandbox folder
