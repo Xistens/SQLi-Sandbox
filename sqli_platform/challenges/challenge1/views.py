@@ -15,7 +15,8 @@ from sqli_platform.utils.challenge import (
     get_config, 
     format_query, 
     login_required,
-    get_flag_session
+    get_flag_session,
+    clear_session
 )
 
 """
@@ -136,6 +137,6 @@ def changepwd():
 
 @challenge1.route("/logout")
 def logout():
-    session.clear()
+    clear_session(_bp)
     return redirect(url_for(f"{_bp}.login"))
 

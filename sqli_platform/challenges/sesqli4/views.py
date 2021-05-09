@@ -16,7 +16,8 @@ from sqli_platform.utils.challenge import (
     format_query, 
     hash_pwd, 
     login_required,
-    get_flag_session
+    get_flag_session,
+    clear_session
 )
 
 """
@@ -104,6 +105,6 @@ def home():
 
 @sesqli4.route("/logout")
 def logout():
-    session.clear()
+    clear_session(_bp)
     return redirect(url_for(f"{_bp}.login"))
 
