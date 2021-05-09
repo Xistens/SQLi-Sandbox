@@ -159,3 +159,13 @@ def download_enabled(f):
             #return redirect(url_for("index"))
         return f(*args, **kwargs)
     return decorated_function
+
+
+def clear_session(bp:str):
+    """
+    Clears all session cookies for challenge
+    """
+
+    names = [k for k in session.keys() if bp in k]
+    for n in names:
+        session.pop(n, None)

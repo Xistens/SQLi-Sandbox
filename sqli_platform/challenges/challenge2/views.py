@@ -10,7 +10,7 @@ from flask import (
     flash
 )
 from sqli_platform import (app, clog, db)
-from sqli_platform.utils.challenge import (get_flag, get_config, format_query, login_required)
+from sqli_platform.utils.challenge import (get_flag, get_config, format_query, login_required, clear_session)
 
 """
 Dump passwords to get flag:
@@ -117,6 +117,6 @@ def changepwd():
 
 @challenge2.route("/logout")
 def logout():
-    session.clear()
+    clear_session(_bp)
     return redirect(url_for(f"{_bp}.login"))
 

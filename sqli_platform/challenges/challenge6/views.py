@@ -11,7 +11,7 @@ from flask import (
     jsonify
 )
 from sqli_platform import app, app_log, db
-from sqli_platform.utils.challenge import get_config, format_query, login_required
+from sqli_platform.utils.challenge import get_config, format_query, login_required, clear_session
 
 """
 The login function has been patched.
@@ -155,7 +155,7 @@ def changepwd():
 
 @challenge6.route("/logout")
 def logout():
-    session.clear()
+    clear_session(_bp)
     return redirect(url_for(f"{_bp}.login"))
 
 
