@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 import sqlite3
 import os
+from flask import flash
 from sqli_platform import app_log
 from sqli_platform.utils.challenge import place_flag_schema
 
@@ -153,6 +154,10 @@ class Database(object):
         except sqlite3.OperationalError as e:
             app_log.error(e)
             rv = {}
+        except sqlite3.Warning as e:
+            app_log.error(e)
+            rv = {}
+            flash(f"Database error: {e}", "danger")
         return (rv[0] if rv else None) if one else rv
 
 
