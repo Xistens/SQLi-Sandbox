@@ -104,6 +104,8 @@ def view(dir, filename):
     if not filename == "__init__.py":
         filename = secure_filename(filename)
         
+    dir_path = ""
+    content = ""
     if dir:
         if dir in DOWNLOAD_WHITELIST:
             dir_path = f"{DOWNLOAD_PATH}{dir}/{filename}"
@@ -113,9 +115,8 @@ def view(dir, filename):
         dir_path = f"{DOWNLOAD_PATH}{filename}"
 
     try:
-        text = open(dir_path, "r")
-        content = text.read()
-        text.close()
+        with open(dir_path, "r") as fd:
+            content = fd.read()
     except IOError:
         content = "File does not exist."
     return render_template("view.html", dir=dir, text=content, name=filename)
