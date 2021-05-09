@@ -171,3 +171,6 @@ class Database(object):
             app_log.error(name, query, args)
         except sqlite3.OperationalError:
             app_log.error(name, query, args)
+        except sqlite3.Warning as e:
+            app_log.error(name, query, args)
+            flash(f"Database error: {e}", "danger")
